@@ -55,4 +55,9 @@ class Admin extends Authenticatable
     {
         return $this->hasMany(Profile::class);
     }
+
+    public function comments()
+    {
+    return $this->hasMany(Comment::class);
+    }
 }

@@ -44,4 +44,9 @@ class Profile extends Model
 
         return $relation;
     }
+
+    public function comments()
+    {
+      return $this->hasMany(Comment::class);
+    }
 }

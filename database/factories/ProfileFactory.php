@@ -23,7 +23,7 @@ class ProfileFactory extends Factory
             'nom' => fake()->lastName(),
             'prenom' => fake()->firstName(),
             'image' => fake()->imageUrl(),
-            'statut' => fake()->randomElement(ProfileStatut::cases()),
+            'statut' => fake()->randomElement(array_map(fn($e) => $e->value, ProfileStatut::cases())),
             'admin_id' => Admin::factory(),
         ];
     }
