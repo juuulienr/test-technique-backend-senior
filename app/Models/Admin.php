@@ -13,7 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $password
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string|null $remember_token
- * 
+ *
  * @method static \Database\Factories\AdminFactory factory($count = null, $state = [])
  */
 class Admin extends Authenticatable

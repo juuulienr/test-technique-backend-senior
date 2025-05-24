@@ -33,4 +33,52 @@ class ProfileTest extends TestCase
         $imagePath = 'images/' . basename($response['data']['image']);
         $this->assertTrue(Storage::disk('public')->exists($imagePath), "L'image n'existe pas dans le stockage");
     }
+
+
+    public function test_admin_can_update_own_profile(): void
+    {
+        Storage::fake('public');
+
+        $admin = Admin::factory()->create();
+        $token = $admin->createToken('token')->plainTextToken;
+
+        $responseCreate = $this->withToken($token)->postJson('/api/admin/profiles', [
+          'nom' => 'John',
+          'prenom' => 'Doe',
+          'statut' => 'en attente',
+          'image' => UploadedFile::fake()->image('img.jpg'),
+        ]);
+
+        $profileId = $responseCreate['data']['id'];
+
+        $responseUpdate = $this->withToken($token)->putJson("/api/admin/profiles/{$profileId}", [
+          'nom' => 'Jean',
+        ]);
+
+        $responseUpdate->assertStatus(200)
+                      ->assertJsonFragment(['nom' => 'Jean']);
+    }
+
+    public function test_admin_can_delete_own_profile(): void
+    {
+        Storage::fake('public');
+
+        $admin = Admin::factory()->create();
+        $token = $admin->createToken('token')->plainTextToken;
+
+        $responseCreate = $this->withToken($token)->postJson('/api/admin/profiles', [
+          'nom' => 'John',
+          'prenom' => 'Doe',
+          'statut' => 'en attente',
+          'image' => UploadedFile::fake()->image('img.jpg'),
+        ]);
+
+        $profileId = $responseCreate['data']['id'];
+
+        $responseDelete = $this->withToken($token)->deleteJson("/api/admin/profiles/{$profileId}");
+
+        $responseDelete->assertStatus(200)
+                      ->assertJsonFragment(['message' => 'Profil supprimé avec succès.']);
+    }
+
 }

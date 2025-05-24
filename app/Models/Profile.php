@@ -19,29 +19,29 @@ use App\Models\Admin;
  */
 class Profile extends Model
 {
-  /** @use HasFactory<\Database\Factories\ProfileFactory> */
-  use HasFactory;
+    /** @use HasFactory<\Database\Factories\ProfileFactory> */
+    use HasFactory;
 
-  protected $fillable = [
-    'nom',
-    'prenom',
-    'image',
-    'statut',
-    'admin_id',
-  ];
+    protected $fillable = [
+      'nom',
+      'prenom',
+      'image',
+      'statut',
+      'admin_id',
+    ];
 
-  protected $casts = [
-    'statut' => ProfileStatut::class,
-  ];
+    protected $casts = [
+      'statut' => ProfileStatut::class,
+    ];
 
-  /**
-   * @return BelongsTo<\App\Models\Admin, \App\Models\Profile>
-   */
-  public function admin(): BelongsTo
-  {
-    /** @var BelongsTo<\App\Models\Admin, \App\Models\Profile> $relation */
-    $relation = $this->belongsTo(Admin::class);
+    /**
+     * @return BelongsTo<\App\Models\Admin, \App\Models\Profile>
+     */
+    public function admin(): BelongsTo
+    {
+        /** @var BelongsTo<\App\Models\Admin, \App\Models\Profile> $relation */
+        $relation = $this->belongsTo(Admin::class);
 
-    return $relation;
-  }
+        return $relation;
+    }
 }

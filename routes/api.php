@@ -9,6 +9,8 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
-Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
+Route::middleware('auth:admin')->prefix('admin')->group(function () {
     Route::post('/profiles', [ProfileController::class, 'store']);
+    Route::put('/profiles/{profile}', [ProfileController::class, 'update']);
+    Route::delete('/profiles/{profile}', [ProfileController::class, 'destroy']);
 });

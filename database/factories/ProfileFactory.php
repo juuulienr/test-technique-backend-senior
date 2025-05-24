@@ -27,4 +27,4 @@ class ProfileFactory extends Factory
             'admin_id' => Admin::factory(),
         ];
     }
-} 
+}
