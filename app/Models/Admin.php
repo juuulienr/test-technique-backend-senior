@@ -6,6 +6,8 @@ use Database\Factories\AdminFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Profile;
 
 /**
  * @property string $name
@@ -44,5 +46,13 @@ class Admin extends Authenticatable
     protected static function newFactory(): AdminFactory
     {
         return AdminFactory::new();
+    }
+
+    /**
+     * @return HasMany<Profile, $this>
+     */
+    public function profiles(): HasMany
+    {
+        return $this->hasMany(Profile::class);
     }
 }

@@ -81,4 +81,42 @@ class ProfileTest extends TestCase
                       ->assertJsonFragment(['message' => 'Profil supprimé avec succès.']);
     }
 
+
+    public function test_public_does_not_see_statut_field(): void
+    {
+        $admin = Admin::factory()->create();
+
+        $admin->profiles()->create([
+          'nom' => 'Alice',
+          'prenom' => 'Test',
+          'image' => 'images/fake.jpg',
+          'statut' => 'actif',
+        ]);
+
+        $response = $this->getJson('/api/profiles');
+
+        $response->assertStatus(200)
+                ->assertJsonMissing(['statut']);
+    }
+
+
+    public function test_admin_sees_statut_field(): void
+    {
+        $admin = Admin::factory()->create();
+        $token = $admin->createToken('admin_token')->plainTextToken;
+
+        $admin->profiles()->create([
+          'nom' => 'Bob',
+          'prenom' => 'Visible',
+          'image' => 'images/bob.jpg',
+          'statut' => 'actif',
+        ]);
+
+        $response = $this->withToken($token)->getJson('/api/profiles');
+
+        $response->assertStatus(200)
+                ->assertJsonFragment(['statut' => 'actif']);
+    }
+
+
 }
