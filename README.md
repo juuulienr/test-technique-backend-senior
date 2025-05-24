@@ -1,4 +1,4 @@
-# API Profils – Test Technique Laravel
+# Test Technique Laravel
 
 Ce projet est une API Laravel 11 développée dans le cadre d'un test technique.  
 Elle gère des entités **administrateur**, **profil** et **commentaire**, avec authentification via Sanctum.
@@ -23,7 +23,6 @@ php artisan db:seed
 - Composer
 - MySQL ou PostgreSQL
 - Laravel 11
-- Node.js (optionnel, si front ou mix utilisé)
 
 ## ⚙️ Authentification
 
@@ -38,5 +37,5 @@ php artisan test
 
 ## 📦 Qualité du code
 
-- Formatage : PHP-CS-Fixer (`composer fix`)
-- Analyse statique : PHPStan (`composer analyse`)
+- Formatage : PHP-CS-Fixer (`./vendor/bin/php-cs-fixer fix`)
+- Analyse statique : PHPStan (`./vendor/bin/phpstan analyse`)

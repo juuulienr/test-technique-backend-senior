@@ -1,5 +1,8 @@
+includes:
+  - ./vendor/nunomaduro/larastan/extension.neon
+  
 parameters:
-  level: 5
+  level: 8
   paths:
     - app
     - routes
@@ -8,4 +11,5 @@ parameters:
     analyse:
       - vendor
       - routes/console.php
-
+  ignoreErrors:
+    - '#uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types#'
