@@ -14,12 +14,12 @@ use Laravel\Sanctum\HasApiTokens;
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string|null $remember_token
  * 
- * @template TFactory of \Database\Factories\AdminFactory
- * @method static TFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\AdminFactory factory($count = null, $state = [])
  */
 class Admin extends Authenticatable
 {
     use HasApiTokens;
+    /** @use HasFactory<\Database\Factories\AdminFactory> */
     use HasFactory;
 
     protected $fillable = [
