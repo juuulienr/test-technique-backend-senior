@@ -18,7 +18,7 @@ class CommentController extends Controller
     public function store(StoreCommentRequest $request, Profile $profile): JsonResponse
     {
         $user = $request->user();
-        
+
         if (!($user instanceof Admin)) {
             return response()->json(['message' => 'Unauthorized. Admin access required.'], 403);
         }
