@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CommentFactory extends Factory
 {
-  protected $model = Comment::class;
+    protected $model = Comment::class;
 
-  public function definition(): array
-  {
-    return [
-      'contenu' => $this->faker->sentence(),
-      'admin_id' => Admin::factory(),
-      'profile_id' => Profile::factory(),
-    ];
-  }
+    public function definition(): array
+    {
+        return [
+          'contenu' => $this->faker->sentence(),
+          'admin_id' => Admin::factory(),
+          'profile_id' => Profile::factory(),
+        ];
+    }
 }

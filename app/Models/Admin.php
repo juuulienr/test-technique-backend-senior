@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Profile;
+use App\Models\Comment;
 
 /**
  * @property string $name
@@ -56,8 +57,11 @@ class Admin extends Authenticatable
         return $this->hasMany(Profile::class);
     }
 
-    public function comments()
+    /**
+     * @return HasMany<Comment, $this>
+     */
+    public function comments(): HasMany
     {
-    return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class);
     }
 }

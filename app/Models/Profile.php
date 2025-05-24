@@ -6,7 +6,9 @@ use App\Enums\ProfileStatut;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Admin;
+use App\Models\Comment;
 
 /**
  * @property string $nom
@@ -45,8 +47,11 @@ class Profile extends Model
         return $relation;
     }
 
-    public function comments()
+    /**
+     * @return HasMany<Comment, $this>
+     */
+    public function comments(): HasMany
     {
-      return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class);
     }
 }
