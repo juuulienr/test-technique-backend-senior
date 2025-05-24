@@ -1,4 +1,4 @@
-# 🚀 Test Technique Laravel - API Administrateur / Profil / Commentaire
+# 🚀 Test Technique Laravel
 
 Ce projet est une API développée avec **Laravel 11**, dans le cadre d'un test technique pour un poste back-end senior.  
 Elle met en œuvre les bonnes pratiques de structuration, typage, validation, sécurité et qualité de code.
@@ -58,6 +58,12 @@ Toutes les routes sensibles sont protégées par le middleware `auth:sanctum`.
 - `PUT /api/profils/{id}` : mise à jour d'un profil
 - `DELETE /api/profils/{id}` : suppression d'un profil
 - `POST /api/commentaires` : ajout d'un commentaire unique à un profil
+
+## 📚 Documentation API
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://www.postman.com/workspace/Personal-Workspace~36238254-d24c-4c35-a285-f076a53b2d9b/collection/38215188-40a0e712-9237-4d0d-a904-63923a632ba7?action=share&creator=38215188&active-environment=38215188-6be0bf19-8f28-4887-aba7-b410310a7a9d)
+
+Une collection Postman est disponible pour tester facilement tous les endpoints de l'API.
 
 ## 🧪 Tests
 
