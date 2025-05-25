@@ -13,9 +13,9 @@ services:
       - APP_KEY=${APP_KEY}
       - APP_DEBUG=${APP_DEBUG}
       - APP_URL=http://localhost:8000
-      - DB_CONNECTION=mysql
+      - DB_CONNECTION=pgsql
       - DB_HOST=db
-      - DB_PORT=3306
+      - DB_PORT=5432
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -41,18 +41,17 @@ services:
       - app
 
   db:
-    image: mysql:8.0
+    image: postgres:15-alpine
     container_name: laravel-db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: laravel_test
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: laravel
-      MYSQL_PASSWORD: secret
+      POSTGRES_DB: laravel_test
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: secret
     volumes:
-      - dbdata:/var/lib/mysql
+      - dbdata:/var/lib/postgresql/data
     ports:
-      - "3306:3306"
+      - "5432:5432"
     networks:
       - laravel-network
 
