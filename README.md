@@ -91,3 +91,50 @@ Analyse statique : PHPStan
 
 - Séparation métier / contrôleur via Services & FormRequests
 - Types PHP 8+ et validation forte
+
+## Installation avec Docker
+
+Ce projet utilise Docker pour garantir un environnement de développement cohérent et facile à mettre en place.
+
+### Prérequis
+- Docker
+- Docker Compose
+
+### Installation
+
+1. Cloner le repository
+```bash
+git clone [votre-repo]
+cd [votre-repo]
+```
+
+2. Copier le fichier d'environnement
+```bash
+cp .env.example .env
+```
+
+3. Lancer les conteneurs Docker
+```bash
+docker-compose up -d
+```
+
+4. Installer les dépendances et configurer Laravel
+```bash
+docker-compose exec app composer install
+docker-compose exec app php artisan key:generate
+docker-compose exec app php artisan migrate
+```
+
+L'application est maintenant accessible à l'adresse : http://localhost:8000
+
+### Informations techniques
+
+- PHP 8.2
+- MySQL 8.0
+- Nginx dernière version stable
+- Composer 2
+
+### Arrêter l'environnement
+```bash
+docker-compose down
+```
