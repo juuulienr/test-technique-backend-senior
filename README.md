@@ -20,32 +20,97 @@ Elle met en œuvre les bonnes pratiques de structuration, typage, validation, s�
 
 ## ✅ Prérequis
 
-- PHP >= 8.2
-- Composer
-- MySQL ou PostgreSQL
-- Laravel 11
+- Docker
+- Docker Compose
+- Git
 
 ---
 
-## 🔧 Installation
+## 🐳 Installation avec Docker
 
+Le projet utilise Docker pour garantir un environnement de développement cohérent et facile à mettre en place.
+
+### 1. Cloner le repository
 ```bash
-git clone <url-du-repo>
-cd nom-du-projet
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
-php artisan db:seed
+git clone [votre-repo]
+cd [votre-repo]
 ```
 
-## 🔐 Authentification
+### 2. Configuration de l'environnement
+```bash
+cp .env.example .env
+```
 
-L'authentification API repose sur Laravel Sanctum.
+Assurez-vous que votre fichier `.env` contient les bonnes configurations pour PostgreSQL :
+```env
+DB_CONNECTION=pgsql
+DB_HOST=db
+DB_PORT=5432
+DB_DATABASE=laravel_test
+DB_USERNAME=laravel
+DB_PASSWORD=secret
+```
 
-Un administrateur peut obtenir un token d'accès via un endpoint sécurisé.
+### 3. Lancer l'environnement Docker
+```bash
+# Construire et démarrer les conteneurs
+docker-compose up -d
 
-Toutes les routes sensibles sont protégées par le middleware `auth:sanctum`.
+# Installer les dépendances
+docker-compose exec app composer install
+
+# Générer la clé d'application
+docker-compose exec app php artisan key:generate
+
+# Exécuter les migrations
+docker-compose exec app php artisan migrate
+
+# Charger les données de test
+docker-compose exec app php artisan db:seed
+```
+
+L'application est maintenant accessible à l'adresse : http://localhost:8000
+
+### 🛠 Stack Technique
+
+- PHP 8.2
+- Laravel 11
+- PostgreSQL 15
+- Nginx dernière version stable
+- Docker & Docker Compose
+
+### 📦 Services Docker
+
+- **app** : Application PHP/Laravel
+- **nginx** : Serveur web
+- **db** : Base de données PostgreSQL
+
+### 🔧 Commandes Docker utiles
+
+```bash
+# Voir l'état des conteneurs
+docker-compose ps
+
+# Voir les logs
+docker-compose logs
+
+# Logs d'un service spécifique
+docker-compose logs app
+docker-compose logs db
+docker-compose logs nginx
+
+# Exécuter des commandes Artisan
+docker-compose exec app php artisan [commande]
+
+# Accéder au shell PHP
+docker-compose exec app bash
+
+# Arrêter l'environnement
+docker-compose down
+
+# Arrêter et supprimer les volumes
+docker-compose down -v
+```
 
 ## 📡 Endpoints
 
@@ -68,7 +133,8 @@ Une collection Postman est disponible pour tester facilement tous les endpoints 
 ## 🧪 Tests
 
 ```bash
-php artisan test
+# Exécuter les tests avec Docker
+docker-compose exec app php artisan test
 ```
 
 Inclut :
@@ -81,60 +147,13 @@ Inclut :
 
 Formatage : PHP-CS-Fixer
 ```bash
-./vendor/bin/php-cs-fixer fix
+docker-compose exec app ./vendor/bin/php-cs-fixer fix
 ```
 
 Analyse statique : PHPStan
 ```bash
-./vendor/bin/phpstan analyse
+docker-compose exec app ./vendor/bin/phpstan analyse
 ```
 
 - Séparation métier / contrôleur via Services & FormRequests
 - Types PHP 8+ et validation forte
-
-## Installation avec Docker
-
-Ce projet utilise Docker pour garantir un environnement de développement cohérent et facile à mettre en place.
-
-### Prérequis
-- Docker
-- Docker Compose
-
-### Installation
-
-1. Cloner le repository
-```bash
-git clone [votre-repo]
-cd [votre-repo]
-```
-
-2. Copier le fichier d'environnement
-```bash
-cp .env.example .env
-```
-
-3. Lancer les conteneurs Docker
-```bash
-docker-compose up -d
-```
-
-4. Installer les dépendances et configurer Laravel
-```bash
-docker-compose exec app composer install
-docker-compose exec app php artisan key:generate
-docker-compose exec app php artisan migrate
-```
-
-L'application est maintenant accessible à l'adresse : http://localhost:8000
-
-### Informations techniques
-
-- PHP 8.2
-- MySQL 8.0
-- Nginx dernière version stable
-- Composer 2
-
-### Arrêter l'environnement
-```bash
-docker-compose down
-```
