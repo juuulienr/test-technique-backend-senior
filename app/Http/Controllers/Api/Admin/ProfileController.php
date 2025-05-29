@@ -42,6 +42,7 @@ class ProfileController extends Controller
 
     public function update(UpdateProfileRequest $request, Profile $profile): JsonResponse
     {
+        /** @var Admin|null $user */
         $user = $request->user();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
@@ -62,7 +63,9 @@ class ProfileController extends Controller
 
     public function destroy(Profile $profile): JsonResponse
     {
-        if ($profile->admin_id !== auth()->id()) {
+        /** @var Admin|null $user */
+        $user = auth('admin')->user();
+        if (!$user || $profile->admin_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
