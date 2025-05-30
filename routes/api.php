@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\Admin\ProfileController;
-use App\Http\Controllers\Api\Public\ProfilePublicController;
+use App\Http\Controllers\Api\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\Api\Public\ProfileController as PublicProfileController;
 use App\Http\Controllers\Api\Admin\CommentController;
 
 Route::prefix('auth')->group(function () {
@@ -13,13 +13,13 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware(['auth:admin', 'throttle:60,1'])->prefix('admin')->group(function () {
     // Profils
-    Route::post('/profiles', [ProfileController::class, 'store']);
-    Route::put('/profiles/{profile}', [ProfileController::class, 'update']);
-    Route::delete('/profiles/{profile}', [ProfileController::class, 'destroy']);
+    Route::post('/profiles', [AdminProfileController::class, 'store']);
+    Route::put('/profiles/{profile}', [AdminProfileController::class, 'update']);
+    Route::delete('/profiles/{profile}', [AdminProfileController::class, 'destroy']);
 
     // Commentaires
     Route::post('/profiles/{profile}/comments', [CommentController::class, 'store']);
 });
 
 // Endpoint public
-Route::get('/profiles', [ProfilePublicController::class, 'index']);
+Route::get('/profiles', [PublicProfileController::class, 'index']);

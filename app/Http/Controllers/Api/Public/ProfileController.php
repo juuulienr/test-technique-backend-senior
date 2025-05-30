@@ -7,7 +7,7 @@ use App\Models\Profile;
 use App\Http\Resources\ProfileResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class ProfilePublicController extends Controller
+class ProfileController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
