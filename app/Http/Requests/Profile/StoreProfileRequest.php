@@ -9,7 +9,7 @@ use Illuminate\Validation\Rules\Enum;
 /**
  * @property string $nom
  * @property string $prenom
- * @property \Illuminate\Http\UploadedFile|null $image
+ * @property \Illuminate\Http\UploadedFile $image
  * @property ProfileStatut $statut
  */
 class StoreProfileRequest extends FormRequest
@@ -43,7 +43,7 @@ class StoreProfileRequest extends FormRequest
                 'regex:/^[\p{L}\s\'-]+$/u',
             ],
             'image' => [
-                'nullable',
+                'required',
                 'image',
                 'mimes:jpeg,png,jpg',
                 'max:2048',
@@ -67,6 +67,7 @@ class StoreProfileRequest extends FormRequest
             'nom.regex' => 'Le nom ne peut contenir que des lettres, des espaces, des apostrophes et des tirets.',
             'prenom.required' => 'Le prénom est obligatoire.',
             'prenom.regex' => 'Le prénom ne peut contenir que des lettres, des espaces, des apostrophes et des tirets.',
+            'image.required' => 'L\'image est obligatoire.',
             'image.image' => 'Le fichier doit être une image.',
             'image.mimes' => 'L\'image doit être au format JPEG, PNG ou JPG.',
             'image.max' => 'L\'image ne doit pas dépasser 2 Mo.',

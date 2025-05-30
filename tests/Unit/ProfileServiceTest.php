@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Admin;
 use App\Models\Profile;
+use App\Services\ImageService;
 use App\Services\ProfileService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -19,7 +20,8 @@ class ProfileServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->profileService = new ProfileService();
+        $imageService = new ImageService();
+        $this->profileService = new ProfileService($imageService);
         Storage::fake('public');
     }
 

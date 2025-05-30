@@ -27,9 +27,14 @@ class ProfileController extends Controller
         /** @var array{nom: string, prenom: string, statut: string} */
         $validated = $request->validated();
 
+        $image = $request->file('image');
+        if (!$image) {
+            return response()->json(['message' => 'Image is required'], 422);
+        }
+
         $profile = $this->profileService->createProfile(
             $validated,
-            $request->file('image'),
+            $image,
             $user->id
         );
 
