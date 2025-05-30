@@ -126,4 +126,4 @@ class ImageServiceTest extends TestCase
 
         $this->assertNull($url);
     }
-} 
+}

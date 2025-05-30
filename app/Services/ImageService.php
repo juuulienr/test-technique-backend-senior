@@ -13,11 +13,11 @@ class ImageService
     public function upload(UploadedFile $image, string $directory = 'images'): string
     {
         $path = $image->store($directory, 'public');
-        
+
         if ($path === false) {
             throw new \RuntimeException('Failed to upload image');
         }
-        
+
         return $path;
     }
 
@@ -70,4 +70,4 @@ class ImageService
 
         return Storage::url($imagePath);
     }
-} 
+}
