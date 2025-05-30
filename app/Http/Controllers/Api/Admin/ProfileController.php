@@ -19,10 +19,8 @@ class ProfileController extends Controller
 
     public function store(StoreProfileRequest $request): JsonResponse
     {
+        /** @var Admin $user */
         $user = $request->user();
-        if (!$user instanceof Admin) {
-            throw new \RuntimeException('User must be an admin');
-        }
 
         /** @var array{nom: string, prenom: string, statut: string} */
         $validated = $request->validated();
@@ -44,19 +42,8 @@ class ProfileController extends Controller
         ], 201);
     }
 
-
     public function update(UpdateProfileRequest $request, Profile $profile): JsonResponse
     {
-        /** @var Admin|null $user */
-        $user = $request->user();
-        if (!$user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
-
-        if ($profile->admin_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
         $updated = $this->profileService->updateProfile(
             $profile,
             $request->validated(),
@@ -68,15 +55,8 @@ class ProfileController extends Controller
 
     public function destroy(Profile $profile): JsonResponse
     {
-        /** @var Admin|null $user */
-        $user = auth('admin')->user();
-        if (!$user || $profile->admin_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
         $this->profileService->deleteProfile($profile);
 
         return response()->json(['message' => 'Profil supprimé avec succès.']);
     }
-
 }

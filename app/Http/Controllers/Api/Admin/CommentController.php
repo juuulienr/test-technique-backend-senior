@@ -17,11 +17,8 @@ class CommentController extends Controller
 
     public function store(StoreCommentRequest $request, Profile $profile): JsonResponse
     {
+        /** @var Admin $user */
         $user = $request->user();
-
-        if (!($user instanceof Admin)) {
-            return response()->json(['message' => 'Unauthorized. Admin access required.'], 403);
-        }
 
         if ($this->commentService->hasAlreadyCommented($user, $profile)) {
             return response()->json(['message' => 'Vous avez déjà commenté ce profil.'], 403);
