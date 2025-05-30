@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Responses\ApiResponse;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 
@@ -22,10 +23,7 @@ class AuthController extends Controller
             'password' => $request->password,
         ]);
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+        return ApiResponse::auth($token);
     }
 
     public function login(LoginRequest $request): JsonResponse
@@ -35,9 +33,6 @@ class AuthController extends Controller
             'password' => $request->password,
         ]);
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+        return ApiResponse::auth($token);
     }
 }

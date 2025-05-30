@@ -28,7 +28,12 @@ class ProfileTest extends TestCase
           ]);
 
         $response->assertStatus(201)
-                 ->assertJsonStructure(['message', 'data' => ['id', 'nom', 'prenom', 'image', 'statut', 'admin_id']]);
+                 ->assertJsonStructure([
+                     'success',
+                     'message', 
+                     'data' => ['id', 'nom', 'prenom', 'image', 'statut', 'admin_id']
+                 ])
+                 ->assertJson(['success' => true]);
 
         $imagePath = 'images/' . basename($response['data']['image']);
         $this->assertTrue(Storage::disk('public')->exists($imagePath), "L'image n'existe pas dans le stockage");
@@ -56,6 +61,7 @@ class ProfileTest extends TestCase
         ]);
 
         $responseUpdate->assertStatus(200)
+                      ->assertJson(['success' => true])
                       ->assertJsonFragment(['nom' => 'Jean']);
     }
 
@@ -78,7 +84,10 @@ class ProfileTest extends TestCase
         $responseDelete = $this->withToken($token)->deleteJson("/api/admin/profiles/{$profileId}");
 
         $responseDelete->assertStatus(200)
-                      ->assertJsonFragment(['message' => 'Profil supprimé avec succès.']);
+                      ->assertJson([
+                          'success' => true,
+                          'message' => 'Profil supprimé avec succès'
+                      ]);
     }
 
 

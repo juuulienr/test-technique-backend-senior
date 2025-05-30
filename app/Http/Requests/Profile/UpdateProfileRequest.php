@@ -2,25 +2,36 @@
 
 namespace App\Http\Requests\Profile;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\ProfileStatut;
+use Illuminate\Validation\Rules\Enum;
 
-class UpdateProfileRequest extends FormRequest
+class UpdateProfileRequest extends BaseProfileRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
-     * @return array<string, array<int, string>>
+     * @return array<string, mixed>
      */
     public function rules(): array
     {
         return [
-          'nom' => ['sometimes', 'string', 'max:255'],
-          'prenom' => ['sometimes', 'string', 'max:255'],
-          'image' => ['sometimes', 'file', 'image', 'max:2048'],
-          'statut' => ['sometimes', 'in:inactif,en attente,actif'],
+            'nom' => $this->getNameRules(false),
+            'prenom' => $this->getNameRules(false),
+            'image' => $this->getImageRules(false),
+            'statut' => [
+                'sometimes',
+                new Enum(ProfileStatut::class),
+            ],
         ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return array_merge($this->getCommonMessages(), [
+            'statut.enum' => 'Le statut doit être une valeur valide.',
+        ]);
     }
 }

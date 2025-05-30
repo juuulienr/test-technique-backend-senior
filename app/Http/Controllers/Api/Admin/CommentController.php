@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Comment\StoreCommentRequest;
+use App\Http\Responses\ApiResponse;
 use App\Models\Profile;
 use App\Services\CommentService;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +22,7 @@ class CommentController extends Controller
         $user = $request->user();
 
         if ($this->commentService->hasAlreadyCommented($user, $profile)) {
-            return response()->json(['message' => 'Vous avez déjà commenté ce profil.'], 403);
+            return ApiResponse::error('Vous avez déjà commenté ce profil.', 403);
         }
 
         $comment = $this->commentService->createComment(
@@ -30,6 +31,6 @@ class CommentController extends Controller
             $profile
         );
 
-        return response()->json($comment, 201);
+        return ApiResponse::created($comment, 'Commentaire créé avec succès');
     }
 }
