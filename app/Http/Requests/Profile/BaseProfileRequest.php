@@ -13,7 +13,7 @@ abstract class BaseProfileRequest extends FormRequest
 
     /**
      * Règles communes pour nom et prénom
-     * 
+     *
      * @return array<int, string>
      */
     protected function getNameRules(bool $required = true): array
@@ -35,7 +35,7 @@ abstract class BaseProfileRequest extends FormRequest
 
     /**
      * Règles communes pour les images
-     * 
+     *
      * @return array<int, string>
      */
     protected function getImageRules(bool $required = true): array
@@ -57,7 +57,7 @@ abstract class BaseProfileRequest extends FormRequest
 
     /**
      * Messages d'erreur communs
-     * 
+     *
      * @return array<string, string>
      */
     protected function getCommonMessages(): array
@@ -93,4 +93,4 @@ abstract class BaseProfileRequest extends FormRequest
             $this->merge($merge);
         }
     }
-} 
+}

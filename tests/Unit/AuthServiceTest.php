@@ -18,7 +18,9 @@ class AuthServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->authService = new AuthService();
+
+        // Utiliser l'injection de dépendances du container Laravel
+        $this->authService = $this->app->make(AuthService::class);
     }
 
     public function test_it_registers_and_returns_token(): void

@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\Models\Admin;
 use App\Models\Profile;
-use App\Services\ImageService;
 use App\Services\ProfileService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -20,8 +19,9 @@ class ProfileServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $imageService = new ImageService();
-        $this->profileService = new ProfileService($imageService);
+
+        // Utiliser l'injection de dépendances du container Laravel
+        $this->profileService = $this->app->make(ProfileService::class);
         Storage::fake('public');
     }
 

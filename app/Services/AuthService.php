@@ -2,39 +2,50 @@
 
 namespace App\Services;
 
-use App\Models\Admin;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use App\Domain\DTOs\AuthDTO;
+use App\Domain\UseCases\Auth\LoginUseCase;
+use App\Domain\UseCases\Auth\RegisterUseCase;
 
-class AuthService
+/**
+ * Service d'authentification - couche application
+ * Orchestre les Use Cases d'authentification
+ */
+final class AuthService
 {
-    /**
-     * @param array<string, string> $data
-     */
-    public function register(array $data): string
-    {
-        $admin = Admin::create([
-          'name' => $data['name'],
-          'email' => $data['email'],
-          'password' => Hash::make($data['password']),
-        ]);
-
-        return $admin->createToken('auth_token')->plainTextToken;
+    public function __construct(
+        private LoginUseCase $loginUseCase,
+        private RegisterUseCase $registerUseCase
+    ) {
     }
 
     /**
-     * @param array<string, string> $data
+     * Inscription d'un nouvel administrateur
+     *
+     * @param array{name: string, email: string, password: string} $data
+     */
+    public function register(array $data): string
+    {
+        $authDTO = AuthDTO::forRegister(
+            name: $data['name'],
+            email: $data['email'],
+            password: $data['password']
+        );
+
+        return $this->registerUseCase->execute($authDTO);
+    }
+
+    /**
+     * Connexion d'un administrateur
+     *
+     * @param array{email: string, password: string} $data
      */
     public function login(array $data): string
     {
-        $admin = Admin::where('email', $data['email'])->first();
+        $authDTO = AuthDTO::forLogin(
+            email: $data['email'],
+            password: $data['password']
+        );
 
-        if (! $admin || ! Hash::check($data['password'], $admin->password)) {
-            throw ValidationException::withMessages([
-              'email' => ['The provided credentials are incorrect.'],
-            ]);
-        }
-
-        return $admin->createToken('auth_token')->plainTextToken;
+        return $this->loginUseCase->execute($authDTO);
     }
 }

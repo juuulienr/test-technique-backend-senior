@@ -30,7 +30,7 @@ class ProfileTest extends TestCase
         $response->assertStatus(201)
                  ->assertJsonStructure([
                      'success',
-                     'message', 
+                     'message',
                      'data' => ['id', 'nom', 'prenom', 'image', 'statut', 'admin_id']
                  ])
                  ->assertJson(['success' => true]);

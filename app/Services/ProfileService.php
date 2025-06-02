@@ -2,57 +2,62 @@
 
 namespace App\Services;
 
+use App\Domain\DTOs\CreateProfileDTO;
+use App\Domain\DTOs\UpdateProfileDTO;
+use App\Domain\UseCases\Profile\CreateProfileUseCase;
+use App\Domain\UseCases\Profile\UpdateProfileUseCase;
+use App\Domain\UseCases\Profile\DeleteProfileUseCase;
 use App\Models\Profile;
 use Illuminate\Http\UploadedFile;
 
-class ProfileService
+/**
+ * Service de gestion des profils - couche application
+ * Orchestre les Use Cases de profils
+ */
+final class ProfileService
 {
-    public function __construct(private ImageService $imageService)
-    {
+    public function __construct(
+        private CreateProfileUseCase $createProfileUseCase,
+        private UpdateProfileUseCase $updateProfileUseCase,
+        private DeleteProfileUseCase $deleteProfileUseCase
+    ) {
     }
 
     /**
-     * @param array{
-     *     nom: string,
-     *     prenom: string,
-     *     statut: string
-     * } $data
+     * Crée un nouveau profil
+     *
+     * @param array{nom: string, prenom: string, statut: string} $data
      */
     public function createProfile(array $data, UploadedFile $image, int $adminId): Profile
     {
-        $imagePath = $this->imageService->upload($image);
-
-        return Profile::create([
-          'nom' => $data['nom'],
-          'prenom' => $data['prenom'],
-          'image' => $imagePath,
-          'statut' => $data['statut'],
-          'admin_id' => $adminId,
+        $createProfileDTO = CreateProfileDTO::fromArray([
+            'nom' => $data['nom'],
+            'prenom' => $data['prenom'],
+            'statut' => $data['statut'],
+            'image_path' => '', // Sera géré par le Use Case
+            'admin_id' => $adminId,
         ]);
+
+        return $this->createProfileUseCase->execute($createProfileDTO, $image);
     }
 
     /**
-     * @param array{
-     *     nom?: string,
-     *     prenom?: string,
-     *     statut?: string,
-     *     image?: string|null
-     * } $data
+     * Met à jour un profil existant
+     *
+     * @param array{nom?: string, prenom?: string, statut?: string} $data
      */
-    public function updateProfile(Profile $profile, array $data, ?UploadedFile $image): Profile
+    public function updateProfile(Profile $profile, array $data, ?UploadedFile $image = null): Profile
     {
-        if ($image) {
-            $data['image'] = $this->imageService->replace($profile->image, $image);
-        }
+        $updateProfileDTO = UpdateProfileDTO::fromArray($data);
 
-        $profile->update($data);
-
-        return $profile;
+        return $this->updateProfileUseCase->execute($profile, $updateProfileDTO, $image);
     }
 
+    /**
+     * Supprime un profil
+     */
     public function deleteProfile(Profile $profile): void
     {
-        $this->imageService->delete($profile->image);
-        $profile->delete();
+        $this->deleteProfileUseCase->execute($profile);
     }
 }

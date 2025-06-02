@@ -5,7 +5,11 @@ namespace App\Services;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-class ImageService
+/**
+ * Service de gestion des images - service d'infrastructure
+ * Responsable de l'upload, suppression et manipulation des fichiers images
+ */
+final class ImageService
 {
     /**
      * Upload une image et retourne le chemin de stockage

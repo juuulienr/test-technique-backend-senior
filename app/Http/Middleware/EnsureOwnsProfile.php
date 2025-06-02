@@ -19,7 +19,7 @@ class EnsureOwnsProfile
     {
         /** @var Admin|null $user */
         $user = $request->user();
-        
+
         if (!$user instanceof Admin) {
             return response()->json([
                 'message' => 'Unauthorized. Admin access required.'
@@ -28,7 +28,7 @@ class EnsureOwnsProfile
 
         // Récupérer le profil depuis la route
         $profile = $request->route('profile');
-        
+
         if ($profile instanceof Profile && $profile->admin_id !== $user->id) {
             return response()->json([
                 'message' => 'Unauthorized. You can only access your own profiles.'

@@ -88,4 +88,4 @@ class ApiResponse
     {
         return self::success(null, $message);
     }
-} 
+}

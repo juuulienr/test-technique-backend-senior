@@ -18,7 +18,9 @@ class CommentServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->commentService = new CommentService();
+
+        // Utiliser l'injection de dépendances du container Laravel
+        $this->commentService = $this->app->make(CommentService::class);
     }
 
     public function test_it_creates_a_comment(): void
