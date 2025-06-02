@@ -8,6 +8,9 @@ Elle met en œuvre les bonnes pratiques de structuration, typage, validation, s�
 ## 🧱 Fonctionnalités principales
 
 - Authentification sécurisée via **Laravel Sanctum**
+- **Versioning API** : Structure v1 avec préfixes pour évolutions futures
+- **Routes nommées** : Navigation et génération d'URLs facilitées
+- **Validation stricte** : Types d'ID vérifiés automatiquement
 - Gestion des entités :
   - **Administrateur** : seul type d'utilisateur authentifié
   - **Profil** : CRUD restreint aux administrateurs
@@ -112,17 +115,43 @@ docker-compose down
 docker-compose down -v
 ```
 
-## 📡 Endpoints
+## 📡 Endpoints API v1
 
-### 🔓 Public
-- `GET /api/profils` : liste des profils actifs uniquement (le champ statut est masqué)
+> 🔄 **Versioning** : Toutes les routes sont préfixées par `/api/v1/` pour permettre les évolutions futures de l'API.
 
-### 🔒 Authentifiés
-- `POST /api/login` : connexion administrateur (retourne un token Sanctum)
-- `POST /api/profils` : création d'un profil (avec image)
-- `PUT /api/profils/{id}` : mise à jour d'un profil
-- `DELETE /api/profils/{id}` : suppression d'un profil
-- `POST /api/commentaires` : ajout d'un commentaire unique à un profil
+### 🔓 Endpoints publics
+- `GET /api/v1/profiles` : Liste des profils actifs uniquement (le champ statut est masqué)
+  - Route nommée : `v1.public.profiles.index`
+
+### 🔐 Authentification
+- `POST /api/v1/auth/register` : Inscription administrateur
+  - Route nommée : `v1.auth.register`
+- `POST /api/v1/auth/login` : Connexion administrateur (retourne un token Sanctum)
+  - Route nommée : `v1.auth.login`
+
+### 🔒 Endpoints administrateur (authentifiés)
+
+#### Gestion des profils
+- `POST /api/v1/admin/profiles` : Création d'un profil (avec image)
+  - Route nommée : `v1.admin.profiles.store`
+- `PUT /api/v1/admin/profiles/{id}` : Mise à jour d'un profil
+  - Route nommée : `v1.admin.profiles.update`
+  - ✅ **Validation ID** : Seuls les ID numériques sont acceptés
+- `DELETE /api/v1/admin/profiles/{id}` : Suppression d'un profil
+  - Route nommée : `v1.admin.profiles.destroy`
+  - ✅ **Validation ID** : Seuls les ID numériques sont acceptés
+
+#### Gestion des commentaires
+- `POST /api/v1/admin/profiles/{id}/comments` : Ajout d'un commentaire unique à un profil
+  - Route nommée : `v1.admin.profiles.comments.store`
+  - ✅ **Validation ID** : Seuls les ID numériques sont acceptés
+
+### 🛡️ Sécurité et validations
+
+- **Rate Limiting** : 60 requêtes par minute pour les endpoints admin
+- **Middleware personnalisés** : `owns.profile` pour vérifier la propriété
+- **Validation stricte des ID** : Les paramètres `{profile}` n'acceptent que des entiers positifs
+- **Authentification Sanctum** : Tokens sécurisés pour les sessions API
 
 ## 📚 Documentation API
 
@@ -142,6 +171,7 @@ Inclut :
 - Tests de validation
 - Tests des règles de sécurité
 - Tests de logique métier
+- Tests des nouvelles routes v1
 
 ## 🧰 Qualité du code
 
@@ -157,3 +187,12 @@ docker-compose exec app ./vendor/bin/phpstan analyse
 
 - Séparation métier / contrôleur via Services & FormRequests
 - Types PHP 8+ et validation forte
+- Architecture avec versioning pour maintenabilité
+- Routes nommées pour faciliter les refactorings
+
+## 🔄 Évolutions futures
+
+Grâce au système de versioning mis en place :
+- **v2** : Nouvelles fonctionnalités sans casser la v1
+- **Migration progressive** : Les clients peuvent migrer à leur rythme
+- **Maintenance facilitée** : Corrections de bugs sur plusieurs versions en parallèle
