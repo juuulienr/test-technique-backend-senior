@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Domain\DTOs\CreateCommentDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Comment\StoreCommentRequest;
 use App\Http\Responses\ApiResponse;
@@ -25,11 +26,14 @@ class CommentController extends Controller
             return ApiResponse::error('Vous avez déjà commenté ce profil.', 403);
         }
 
-        $comment = $this->commentService->createComment(
-            $request->validated('contenu'),
-            $user,
-            $profile
+        // ✅ DTO créé dans le contrôleur - transformation HTTP -> Domain
+        $createCommentDTO = new CreateCommentDTO(
+            contenu: $request->validated('contenu'),
+            adminId: $user->id,
+            profileId: $profile->id
         );
+
+        $comment = $this->commentService->createComment($createCommentDTO, $user, $profile);
 
         return ApiResponse::created($comment, 'Commentaire créé avec succès');
     }

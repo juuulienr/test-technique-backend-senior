@@ -32,14 +32,8 @@ final class CommentService
     /**
      * Crée un nouveau commentaire
      */
-    public function createComment(string $contenu, Admin $admin, Profile $profile): Comment
+    public function createComment(CreateCommentDTO $createCommentDTO, Admin $admin, Profile $profile): Comment
     {
-        $createCommentDTO = new CreateCommentDTO(
-            contenu: $contenu,
-            adminId: $admin->id,
-            profileId: $profile->id
-        );
-
         return $this->createCommentUseCase->execute($createCommentDTO, $admin, $profile);
     }
 }

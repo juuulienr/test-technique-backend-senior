@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Domain\DTOs\CreateProfileDTO;
+use App\Domain\DTOs\UpdateProfileDTO;
+use App\Domain\ValueObjects\PersonName;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile\StoreProfileRequest;
 use App\Http\Requests\Profile\UpdateProfileRequest;
@@ -23,26 +26,36 @@ class ProfileController extends Controller
         /** @var Admin $user */
         $user = $request->user();
 
-        /** @var array{nom: string, prenom: string, statut: string} */
-        $validated = $request->validated();
-
-        /** @var UploadedFile $image - Garanti par la validation 'required' */
+        /** @var UploadedFile $image */
         $image = $request->file('image');
 
-        $profile = $this->profileService->createProfile(
-            $validated,
-            $image,
-            $user->id
+        // ✅ DTO créé dans le contrôleur - transformation HTTP -> Domain
+        $createProfileDTO = new CreateProfileDTO(
+            name: new PersonName($request->nom, $request->prenom),
+            statut: $request->statut, // Déjà casté par le Request
+            imagePath: '', // Sera géré par le Use Case
+            adminId: $user->id
         );
+
+        $profile = $this->profileService->createProfile($createProfileDTO, $image);
 
         return ApiResponse::created($profile, 'Profil créé avec succès');
     }
 
     public function update(UpdateProfileRequest $request, Profile $profile): JsonResponse
     {
+        // ✅ DTO créé dans le contrôleur
+        $updateProfileDTO = new UpdateProfileDTO(
+            name: ($request->has('nom') && $request->has('prenom')) 
+                ? new PersonName($request->nom, $request->prenom) 
+                : null,
+            statut: $request->statut ?? null,
+            imagePath: null // Sera géré par le Use Case
+        );
+
         $updated = $this->profileService->updateProfile(
             $profile,
-            $request->validated(),
+            $updateProfileDTO,
             $request->file('image')
         );
 

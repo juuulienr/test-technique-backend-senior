@@ -25,31 +25,17 @@ final class ProfileService
 
     /**
      * Crée un nouveau profil
-     *
-     * @param array{nom: string, prenom: string, statut: string} $data
      */
-    public function createProfile(array $data, UploadedFile $image, int $adminId): Profile
+    public function createProfile(CreateProfileDTO $createProfileDTO, UploadedFile $image): Profile
     {
-        $createProfileDTO = CreateProfileDTO::fromArray([
-            'nom' => $data['nom'],
-            'prenom' => $data['prenom'],
-            'statut' => $data['statut'],
-            'image_path' => '', // Sera géré par le Use Case
-            'admin_id' => $adminId,
-        ]);
-
         return $this->createProfileUseCase->execute($createProfileDTO, $image);
     }
 
     /**
      * Met à jour un profil existant
-     *
-     * @param array{nom?: string, prenom?: string, statut?: string} $data
      */
-    public function updateProfile(Profile $profile, array $data, ?UploadedFile $image = null): Profile
+    public function updateProfile(Profile $profile, UpdateProfileDTO $updateProfileDTO, ?UploadedFile $image = null): Profile
     {
-        $updateProfileDTO = UpdateProfileDTO::fromArray($data);
-
         return $this->updateProfileUseCase->execute($profile, $updateProfileDTO, $image);
     }
 
