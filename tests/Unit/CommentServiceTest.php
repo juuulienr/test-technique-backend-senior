@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Domain\DTOs\CreateCommentDTO;
 use App\Models\Admin;
 use App\Models\Comment;
 use App\Models\Profile;
@@ -28,7 +29,13 @@ class CommentServiceTest extends TestCase
         $admin = Admin::factory()->create();
         $profile = Profile::factory()->create(['admin_id' => $admin->id]);
 
-        $comment = $this->commentService->createComment('Un test de commentaire', $admin, $profile);
+        $createCommentDTO = new CreateCommentDTO(
+            contenu: 'Un test de commentaire',
+            adminId: $admin->id,
+            profileId: $profile->id
+        );
+
+        $comment = $this->commentService->createComment($createCommentDTO, $admin, $profile);
 
         $this->assertInstanceOf(Comment::class, $comment);
         $this->assertDatabaseHas('comments', [

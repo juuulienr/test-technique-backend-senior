@@ -47,6 +47,7 @@ class RegisterUseCaseTest extends TestCase
 
         // Vérifier que le mot de passe est hashé
         $admin = Admin::where('email', 'john@example.com')->first();
+        $this->assertNotNull($admin);
         $this->assertTrue(Hash::check('password123', $admin->password));
 
         // Vérifier qu'un token a été créé
@@ -141,6 +142,7 @@ class RegisterUseCaseTest extends TestCase
         $this->useCase->execute($authDTO);
 
         $admin = Admin::where('email', 'test@example.com')->first();
+        $this->assertNotNull($admin);
 
         // Le mot de passe stocké ne doit pas être en clair
         $this->assertNotEquals($plainPassword, $admin->password);

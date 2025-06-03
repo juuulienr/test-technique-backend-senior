@@ -2,6 +2,10 @@
 
 namespace Tests\Unit;
 
+use App\Domain\DTOs\CreateProfileDTO;
+use App\Domain\DTOs\UpdateProfileDTO;
+use App\Domain\ValueObjects\PersonName;
+use App\Enums\ProfileStatut;
 use App\Models\Admin;
 use App\Models\Profile;
 use App\Services\ProfileService;
@@ -26,15 +30,16 @@ class ProfileServiceTest extends TestCase
     }
 
     /**
-     * @return array{nom: string, prenom: string, statut: string}
+     * @return CreateProfileDTO
      */
-    private function validProfileData(): array
+    private function createValidProfileDTO(int $adminId): CreateProfileDTO
     {
-        return [
-          'nom' => 'NomTest',
-          'prenom' => 'PrenomTest',
-          'statut' => 'actif',
-        ];
+        return new CreateProfileDTO(
+            name: new PersonName('NomTest', 'PrenomTest'),
+            statut: ProfileStatut::ACTIF,
+            imagePath: '', // Sera géré par le Use Case
+            adminId: $adminId
+        );
     }
 
     public function test_it_creates_a_profile_with_image(): void
@@ -42,11 +47,9 @@ class ProfileServiceTest extends TestCase
         $admin = Admin::factory()->create();
         $image = UploadedFile::fake()->image('avatar.jpg');
 
-        $profile = $this->profileService->createProfile(
-            $this->validProfileData(),
-            $image,
-            $admin->id
-        );
+        $createProfileDTO = $this->createValidProfileDTO($admin->id);
+
+        $profile = $this->profileService->createProfile($createProfileDTO, $image);
 
         $this->assertModelExists($profile);
         $this->assertEquals('NomTest', $profile->nom);
@@ -60,18 +63,19 @@ class ProfileServiceTest extends TestCase
         $oldImage = UploadedFile::fake()->image('old.jpg');
         $newImage = UploadedFile::fake()->image('new.jpg');
 
-        $profile = $this->profileService->createProfile(
-            $this->validProfileData(),
-            $oldImage,
-            $admin->id
-        );
+        $createProfileDTO = $this->createValidProfileDTO($admin->id);
+        $profile = $this->profileService->createProfile($createProfileDTO, $oldImage);
 
         $oldImagePath = $profile->image;
         $this->assertNotNull($oldImagePath);
 
-        $updated = $this->profileService->updateProfile($profile, [
-          'nom' => 'Pierre',
-        ], $newImage);
+        $updateProfileDTO = new UpdateProfileDTO(
+            name: new PersonName('Pierre', 'PrenomTest'),
+            statut: null,
+            imagePath: null // Sera géré par le Use Case
+        );
+
+        $updated = $this->profileService->updateProfile($profile, $updateProfileDTO, $newImage);
 
         $this->assertModelExists($updated);
         $this->assertEquals('Pierre', $updated->nom);
@@ -85,18 +89,19 @@ class ProfileServiceTest extends TestCase
         $admin = Admin::factory()->create();
         $image = UploadedFile::fake()->image('photo.jpg');
 
-        $profile = $this->profileService->createProfile(
-            $this->validProfileData(),
-            $image,
-            $admin->id
-        );
+        $createProfileDTO = $this->createValidProfileDTO($admin->id);
+        $profile = $this->profileService->createProfile($createProfileDTO, $image);
 
         $oldImagePath = $profile->image;
         $this->assertNotNull($oldImagePath);
 
-        $updated = $this->profileService->updateProfile($profile, [
-          'prenom' => 'Blanc',
-        ], null);
+        $updateProfileDTO = new UpdateProfileDTO(
+            name: new PersonName('NomTest', 'Blanc'),
+            statut: null,
+            imagePath: null
+        );
+
+        $updated = $this->profileService->updateProfile($profile, $updateProfileDTO, null);
 
         $this->assertModelExists($updated);
         $this->assertEquals('Blanc', $updated->prenom);
@@ -109,11 +114,8 @@ class ProfileServiceTest extends TestCase
         $admin = Admin::factory()->create();
         $image = UploadedFile::fake()->image('img.jpg');
 
-        $profile = $this->profileService->createProfile(
-            $this->validProfileData(),
-            $image,
-            $admin->id
-        );
+        $createProfileDTO = $this->createValidProfileDTO($admin->id);
+        $profile = $this->profileService->createProfile($createProfileDTO, $image);
 
         $imagePath = $profile->image;
         $this->assertNotNull($imagePath);

@@ -19,6 +19,7 @@ final readonly class CreateProfileDTO
 
     /**
      * Factory method pour créer depuis des données primitives
+     * @param array<string, mixed> $data
      */
     public static function fromArray(array $data): self
     {
@@ -32,6 +33,7 @@ final readonly class CreateProfileDTO
 
     /**
      * Convertit en tableau pour la persistance
+     * @return array<string, int|string>
      */
     public function toArray(): array
     {

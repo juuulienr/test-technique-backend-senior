@@ -18,6 +18,7 @@ interface CommentRepositoryInterface
 
     /**
      * Crée un nouveau commentaire
+     * @param array<string, mixed> $data
      */
     public function create(array $data): Comment;
 
@@ -33,11 +34,13 @@ interface CommentRepositoryInterface
 
     /**
      * Récupère tous les commentaires d'un profil
+     * @return Collection<int, Comment>
      */
     public function findByProfileId(int $profileId): Collection;
 
     /**
      * Récupère tous les commentaires d'un admin
+     * @return Collection<int, Comment>
      */
     public function findByAdminId(int $adminId): Collection;
 
@@ -53,6 +56,7 @@ interface CommentRepositoryInterface
 
     /**
      * Récupère les commentaires récents (avec pagination potentielle)
+     * @return Collection<int, Comment>
      */
     public function findRecent(int $limit = 10): Collection;
 }

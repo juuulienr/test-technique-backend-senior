@@ -29,7 +29,6 @@ class ProfileController extends Controller
         /** @var UploadedFile $image */
         $image = $request->file('image');
 
-        // ✅ DTO créé dans le contrôleur - transformation HTTP -> Domain
         $createProfileDTO = new CreateProfileDTO(
             name: new PersonName($request->nom, $request->prenom),
             statut: $request->statut, // Déjà casté par le Request
@@ -44,10 +43,9 @@ class ProfileController extends Controller
 
     public function update(UpdateProfileRequest $request, Profile $profile): JsonResponse
     {
-        // ✅ DTO créé dans le contrôleur
         $updateProfileDTO = new UpdateProfileDTO(
-            name: ($request->has('nom') && $request->has('prenom')) 
-                ? new PersonName($request->nom, $request->prenom) 
+            name: ($request->has('nom') && $request->has('prenom'))
+                ? new PersonName($request->nom, $request->prenom)
                 : null,
             statut: $request->statut ?? null,
             imagePath: null // Sera géré par le Use Case

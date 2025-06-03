@@ -73,6 +73,7 @@ class UpdateProfileDTOTest extends TestCase
 
         $dto = UpdateProfileDTO::fromArray($data);
 
+        $this->assertNotNull($dto->name);
         $this->assertEquals('Durand', $dto->name->nom());
         $this->assertEquals('Marie', $dto->name->prenom());
         $this->assertEquals(ProfileStatut::EN_ATTENTE, $dto->statut);

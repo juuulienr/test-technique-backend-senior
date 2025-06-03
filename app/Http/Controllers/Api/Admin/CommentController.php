@@ -26,7 +26,6 @@ class CommentController extends Controller
             return ApiResponse::error('Vous avez déjà commenté ce profil.', 403);
         }
 
-        // ✅ DTO créé dans le contrôleur - transformation HTTP -> Domain
         $createCommentDTO = new CreateCommentDTO(
             contenu: $request->validated('contenu'),
             adminId: $user->id,

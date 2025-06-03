@@ -17,6 +17,9 @@ final class EloquentCommentRepository implements CommentRepositoryInterface
         return Comment::find($id);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function create(array $data): Comment
     {
         return Comment::create($data);
@@ -34,6 +37,9 @@ final class EloquentCommentRepository implements CommentRepositoryInterface
                      ->exists();
     }
 
+    /**
+     * @return Collection<int, Comment>
+     */
     public function findByProfileId(int $profileId): Collection
     {
         return Comment::where('profile_id', $profileId)
@@ -42,6 +48,9 @@ final class EloquentCommentRepository implements CommentRepositoryInterface
                      ->get();
     }
 
+    /**
+     * @return Collection<int, Comment>
+     */
     public function findByAdminId(int $adminId): Collection
     {
         return Comment::where('admin_id', $adminId)
@@ -60,6 +69,9 @@ final class EloquentCommentRepository implements CommentRepositoryInterface
         return Comment::where('profile_id', $profileId)->count();
     }
 
+    /**
+     * @return Collection<int, Comment>
+     */
     public function findRecent(int $limit = 10): Collection
     {
         return Comment::with(['admin', 'profile'])

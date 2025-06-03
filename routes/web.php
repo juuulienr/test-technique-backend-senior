@@ -3,5 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    /** @phpstan-var view-string $viewName */
+    $viewName = 'welcome';
+    return view($viewName);
 });

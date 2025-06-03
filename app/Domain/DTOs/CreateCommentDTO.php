@@ -16,6 +16,7 @@ final readonly class CreateCommentDTO
 
     /**
      * Factory method pour créer depuis des données primitives
+     * @param array<string, mixed> $data
      */
     public static function fromArray(array $data): self
     {
@@ -28,6 +29,7 @@ final readonly class CreateCommentDTO
 
     /**
      * Convertit en tableau pour la persistance
+     * @return array<string, int|string>
      */
     public function toArray(): array
     {

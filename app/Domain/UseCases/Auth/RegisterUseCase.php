@@ -38,7 +38,7 @@ final class RegisterUseCase
             return $this->adminRepository->createAuthToken($admin);
         } catch (QueryException $e) {
             // Fallback au cas où la vérification préalable ne suffirait pas
-            if ($e->errorInfo[0] === '23505' || str_contains($e->getMessage(), 'unique constraint')) {
+            if (($e->errorInfo !== null && $e->errorInfo[0] === '23505') || str_contains($e->getMessage(), 'unique constraint')) {
                 throw new InvalidArgumentException('Cet email est déjà utilisé');
             }
 

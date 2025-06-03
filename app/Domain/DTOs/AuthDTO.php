@@ -40,6 +40,7 @@ final readonly class AuthDTO
 
     /**
      * Factory method depuis un tableau
+     * @param array<string, mixed> $data
      */
     public static function fromArray(array $data): self
     {
@@ -52,6 +53,7 @@ final readonly class AuthDTO
 
     /**
      * Convertit en tableau pour la persistance
+     * @return array<string, string>
      */
     public function toArray(): array
     {

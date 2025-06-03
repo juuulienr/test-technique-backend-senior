@@ -20,12 +20,20 @@ final readonly class Email
 
     public function domain(): string
     {
-        return substr($this->value, strpos($this->value, '@') + 1);
+        $atPosition = strpos($this->value, '@');
+        if ($atPosition === false) {
+            throw new InvalidArgumentException('Email invalide : caractère @ manquant');
+        }
+        return substr($this->value, $atPosition + 1);
     }
 
     public function local(): string
     {
-        return substr($this->value, 0, strpos($this->value, '@'));
+        $atPosition = strpos($this->value, '@');
+        if ($atPosition === false) {
+            throw new InvalidArgumentException('Email invalide : caractère @ manquant');
+        }
+        return substr($this->value, 0, $atPosition);
     }
 
     public function equals(Email $other): bool

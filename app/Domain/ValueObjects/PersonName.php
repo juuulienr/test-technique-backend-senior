@@ -62,6 +62,9 @@ final readonly class PersonName
         }
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toArray(): array
     {
         return [

@@ -96,7 +96,7 @@ class AuthDTOTest extends TestCase
             email: new Email('invalid-email'),
             password: 'password'
         );
-        
+
         $this->assertInstanceOf(AuthDTO::class, $dto);
     }
 

@@ -16,6 +16,7 @@ interface AdminRepositoryInterface
 
     /**
      * Crée un nouvel admin
+     * @param array<string, mixed> $data
      */
     public function create(array $data): Admin;
 

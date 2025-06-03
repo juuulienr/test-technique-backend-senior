@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\Admin\CommentController;
 
 // Version 1 de l'API
 Route::prefix('v1')->group(function () {
-    
+
     // Routes d'authentification
     Route::prefix('auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register'])->name('v1.auth.register');

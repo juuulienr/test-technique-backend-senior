@@ -16,15 +16,27 @@ final class EloquentProfileRepository implements ProfileRepositoryInterface
         return Profile::find($id);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function create(array $data): Profile
     {
         return Profile::create($data);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function update(Profile $profile, array $data): Profile
     {
         $profile->update($data);
-        return $profile->fresh();
+        $freshProfile = $profile->fresh();
+        
+        if ($freshProfile === null) {
+            throw new \RuntimeException('Le profil n\'existe plus après la mise à jour');
+        }
+        
+        return $freshProfile;
     }
 
     public function delete(Profile $profile): void
@@ -32,16 +44,25 @@ final class EloquentProfileRepository implements ProfileRepositoryInterface
         $profile->delete();
     }
 
+    /**
+     * @return Collection<int, Profile>
+     */
     public function findByStatus(ProfileStatut $statut): Collection
     {
         return Profile::where('statut', $statut->value)->get();
     }
 
+    /**
+     * @return Collection<int, Profile>
+     */
     public function findActiveProfiles(): Collection
     {
         return Profile::where('statut', ProfileStatut::ACTIF->value)->get();
     }
 
+    /**
+     * @return Collection<int, Profile>
+     */
     public function findByAdminId(int $adminId): Collection
     {
         return Profile::where('admin_id', $adminId)->get();

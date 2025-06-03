@@ -15,6 +15,9 @@ final class EloquentAdminRepository implements AdminRepositoryInterface
         return Admin::where('email', $email->value())->first();
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function create(array $data): Admin
     {
         return Admin::create($data);
