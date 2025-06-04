@@ -12,6 +12,7 @@ use App\Http\Responses\ApiResponse;
 use App\Services\ProfileService;
 use App\Models\Admin;
 use App\Models\Profile;
+use App\Enums\ProfileStatut;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 
@@ -31,7 +32,7 @@ class ProfileController extends Controller
 
         $createProfileDTO = new CreateProfileDTO(
             name: new PersonName($request->nom, $request->prenom),
-            statut: $request->statut, // Déjà casté par le Request
+            statut: ProfileStatut::from($request->statut),
             imagePath: '', // Sera géré par le Use Case
             adminId: $user->id
         );
@@ -47,7 +48,7 @@ class ProfileController extends Controller
             name: ($request->has('nom') && $request->has('prenom'))
                 ? new PersonName($request->nom, $request->prenom)
                 : null,
-            statut: $request->statut ?? null,
+            statut: $request->statut ? ProfileStatut::from($request->statut) : null,
             imagePath: null // Sera géré par le Use Case
         );
 
