@@ -1,0 +1,40 @@
+<?php
+
+namespace App\UI\Http\Controllers\Api\Admin;
+
+use App\Application\DTOs\CreateCommentDTO;
+use App\Application\Services\CommentApplicationService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Comment\StoreCommentRequest;
+use App\Http\Responses\ApiResponse;
+use App\Models\Profile;
+use App\Domain\ValueObjects\AdminId;
+use App\Domain\ValueObjects\ProfileId;
+use Illuminate\Http\JsonResponse;
+use App\Models\Admin;
+
+class CommentController extends Controller
+{
+    public function __construct(private CommentApplicationService $commentApplicationService)
+    {
+    }
+
+    public function store(StoreCommentRequest $request, Profile $profile): JsonResponse
+    {
+        /** @var Admin $user */
+        $user = $request->user();
+
+        $createCommentDTO = new CreateCommentDTO(
+            contenu: $request->validated('contenu'),
+            adminId: $user->id,
+            profileId: $profile->id
+        );
+
+        try {
+            $comment = $this->commentApplicationService->createComment($createCommentDTO);
+            return ApiResponse::created($comment, 'Commentaire créé avec succès');
+        } catch (\InvalidArgumentException $e) {
+            return ApiResponse::error($e->getMessage(), 403);
+        }
+    }
+}

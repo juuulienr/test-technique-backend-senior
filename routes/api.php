@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Api\Public\ProfileController as PublicProfileController;
-use App\Http\Controllers\Api\Admin\CommentController;
+use App\UI\Http\Controllers\Api\Admin\CommentController;
 
 // Version 1 de l'API
 Route::prefix('v1')->group(function () {

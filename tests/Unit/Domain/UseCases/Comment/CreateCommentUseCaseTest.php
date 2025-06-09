@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\UseCases\Comment;
 
-use App\Domain\DTOs\CreateCommentDTO;
-use App\Domain\UseCases\Comment\CreateCommentUseCase;
+use App\Application\DTOs\CreateCommentDTO;
+use App\Application\UseCases\Comment\CreateCommentUseCase;
+use App\Domain\Entities\Comment;
+use App\Domain\Repositories\CommentRepositoryInterface;
+use App\Domain\ValueObjects\AdminId;
+use App\Domain\ValueObjects\ProfileId;
 use App\Models\Admin;
-use App\Models\Comment;
 use App\Models\Profile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use InvalidArgumentException;
 use Tests\TestCase;
-use App\Domain\Repositories\CommentRepositoryInterface;
 
 class CreateCommentUseCaseTest extends TestCase
 {
@@ -39,12 +41,12 @@ class CreateCommentUseCaseTest extends TestCase
             profileId: $profile->id
         );
 
-        $comment = $this->useCase->execute($createCommentDTO, $admin, $profile);
+        $comment = $this->useCase->execute($createCommentDTO);
 
         $this->assertInstanceOf(Comment::class, $comment);
-        $this->assertEquals('Excellent profil !', $comment->contenu);
-        $this->assertEquals($admin->id, $comment->admin_id);
-        $this->assertEquals($profile->id, $comment->profile_id);
+        $this->assertEquals('Excellent profil !', $comment->getContenu());
+        $this->assertEquals($admin->id, $comment->getAdminId()->getValue());
+        $this->assertEquals($profile->id, $comment->getProfileId()->getValue());
 
         $this->assertDatabaseHas('comments', [
             'contenu' => 'Excellent profil !',
@@ -58,8 +60,8 @@ class CreateCommentUseCaseTest extends TestCase
         $admin = Admin::factory()->create();
         $profile = Profile::factory()->create();
 
-        // Créer un commentaire existant
-        Comment::factory()->create([
+        // Créer un commentaire existant en base
+        \App\Models\Comment::factory()->create([
             'admin_id' => $admin->id,
             'profile_id' => $profile->id,
         ]);
@@ -73,44 +75,10 @@ class CreateCommentUseCaseTest extends TestCase
             profileId: $profile->id
         );
 
-        $this->useCase->execute($createCommentDTO, $admin, $profile);
+        $this->useCase->execute($createCommentDTO);
     }
 
-    public function test_it_throws_exception_for_mismatched_admin_id(): void
-    {
-        $admin = Admin::factory()->create();
-        $otherAdmin = Admin::factory()->create();
-        $profile = Profile::factory()->create();
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('L\'administrateur ne correspond pas');
-
-        $createCommentDTO = new CreateCommentDTO(
-            contenu: 'Commentaire',
-            adminId: $otherAdmin->id, // ID différent de l'admin fourni
-            profileId: $profile->id
-        );
-
-        $this->useCase->execute($createCommentDTO, $admin, $profile);
-    }
-
-    public function test_it_throws_exception_for_mismatched_profile_id(): void
-    {
-        $admin = Admin::factory()->create();
-        $profile = Profile::factory()->create();
-        $otherProfile = Profile::factory()->create();
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Le profil ne correspond pas');
-
-        $createCommentDTO = new CreateCommentDTO(
-            contenu: 'Commentaire',
-            adminId: $admin->id,
-            profileId: $otherProfile->id // ID différent du profil fourni
-        );
-
-        $this->useCase->execute($createCommentDTO, $admin, $profile);
-    }
 
     public function test_it_allows_different_admins_to_comment_same_profile(): void
     {
@@ -130,11 +98,11 @@ class CreateCommentUseCaseTest extends TestCase
             profileId: $profile->id
         );
 
-        $comment1 = $this->useCase->execute($dto1, $admin1, $profile);
-        $comment2 = $this->useCase->execute($dto2, $admin2, $profile);
+        $comment1 = $this->useCase->execute($dto1);
+        $comment2 = $this->useCase->execute($dto2);
 
-        $this->assertNotEquals($comment1->id, $comment2->id);
-        $this->assertEquals(2, Comment::where('profile_id', $profile->id)->count());
+        $this->assertNotEquals($comment1->getId()->getValue(), $comment2->getId()->getValue());
+        $this->assertEquals(2, \App\Models\Comment::where('profile_id', $profile->id)->count());
     }
 
     public function test_it_allows_same_admin_to_comment_different_profiles(): void
@@ -155,10 +123,10 @@ class CreateCommentUseCaseTest extends TestCase
             profileId: $profile2->id
         );
 
-        $comment1 = $this->useCase->execute($dto1, $admin, $profile1);
-        $comment2 = $this->useCase->execute($dto2, $admin, $profile2);
+        $comment1 = $this->useCase->execute($dto1);
+        $comment2 = $this->useCase->execute($dto2);
 
-        $this->assertNotEquals($comment1->id, $comment2->id);
-        $this->assertEquals(2, Comment::where('admin_id', $admin->id)->count());
+        $this->assertNotEquals($comment1->getId()->getValue(), $comment2->getId()->getValue());
+        $this->assertEquals(2, \App\Models\Comment::where('admin_id', $admin->id)->count());
     }
 }

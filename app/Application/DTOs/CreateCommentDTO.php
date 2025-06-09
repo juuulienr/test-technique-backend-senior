@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\DTOs;
+namespace App\Application\DTOs;
 
 final readonly class CreateCommentDTO
 {

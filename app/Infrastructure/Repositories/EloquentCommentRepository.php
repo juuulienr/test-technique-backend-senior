@@ -5,78 +5,99 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repositories;
 
 use App\Domain\Repositories\CommentRepositoryInterface;
-use App\Models\Admin;
-use App\Models\Comment;
-use App\Models\Profile;
-use Illuminate\Database\Eloquent\Collection;
+use App\Domain\Entities\Comment as DomainComment;
+use App\Domain\ValueObjects\CommentId;
+use App\Domain\ValueObjects\AdminId;
+use App\Domain\ValueObjects\ProfileId;
+use App\Infrastructure\Mappers\CommentMapper;
+use App\Models\Comment as EloquentComment;
 
 final class EloquentCommentRepository implements CommentRepositoryInterface
 {
-    public function findById(int $id): ?Comment
+    public function findById(CommentId $id): ?DomainComment
     {
-        return Comment::find($id);
+        $eloquentComment = EloquentComment::find($id->getValue());
+        
+        return $eloquentComment ? CommentMapper::toDomain($eloquentComment) : null;
     }
 
-    /**
-     * @param array<string, mixed> $data
-     */
-    public function create(array $data): Comment
+    public function save(DomainComment $comment): DomainComment
     {
-        return Comment::create($data);
+        $data = CommentMapper::toEloquentData($comment);
+        
+        if ($comment->getId()->getValue() > 1) {
+            // Mise à jour (ID > 1 car 1 est utilisé pour les nouveaux)
+            $eloquentComment = EloquentComment::findOrFail($comment->getId()->getValue());
+            $eloquentComment->update($data);
+        } else {
+            // Création
+            $eloquentComment = EloquentComment::create($data);
+        }
+        
+        return CommentMapper::toDomain($eloquentComment);
     }
 
-    public function delete(Comment $comment): void
+    public function delete(CommentId $commentId): void
     {
-        $comment->delete();
+        EloquentComment::where('id', $commentId->getValue())->delete();
     }
 
-    public function hasAdminCommentedProfile(Admin $admin, Profile $profile): bool
+    public function hasAdminCommentedProfile(AdminId $adminId, ProfileId $profileId): bool
     {
-        return Comment::where('admin_id', $admin->id)
-                     ->where('profile_id', $profile->id)
+        return EloquentComment::where('admin_id', $adminId->getValue())
+                     ->where('profile_id', $profileId->getValue())
                      ->exists();
     }
 
     /**
-     * @return Collection<int, Comment>
+     * @return DomainComment[]
      */
-    public function findByProfileId(int $profileId): Collection
+    public function findByProfileId(ProfileId $profileId): array
     {
-        return Comment::where('profile_id', $profileId)
+        $eloquentComments = EloquentComment::where('profile_id', $profileId->getValue())
                      ->with('admin')
                      ->orderBy('created_at', 'desc')
-                     ->get();
+                     ->get()
+                     ->all();
+        
+        return CommentMapper::toDomainArray($eloquentComments);
     }
 
     /**
-     * @return Collection<int, Comment>
+     * @return DomainComment[]
      */
-    public function findByAdminId(int $adminId): Collection
+    public function findByAdminId(AdminId $adminId): array
     {
-        return Comment::where('admin_id', $adminId)
+        $eloquentComments = EloquentComment::where('admin_id', $adminId->getValue())
                      ->with('profile')
                      ->orderBy('created_at', 'desc')
-                     ->get();
+                     ->get()
+                     ->all();
+        
+        return CommentMapper::toDomainArray($eloquentComments);
     }
 
-    public function deleteByProfileId(int $profileId): int
+    public function deleteByProfileId(ProfileId $profileId): int
     {
-        return Comment::where('profile_id', $profileId)->delete();
+        return EloquentComment::where('profile_id', $profileId->getValue())->delete();
     }
 
-    public function countByProfileId(int $profileId): int
+    public function countByProfileId(ProfileId $profileId): int
     {
-        return Comment::where('profile_id', $profileId)->count();
+        return EloquentComment::where('profile_id', $profileId->getValue())->count();
     }
 
     /**
-     * @return Collection<int, Comment>
+     * @return DomainComment[]
      */
-    public function findRecent(int $limit = 10): Collection
+    public function findRecent(int $limit = 10): array
     {
-        return Comment::with(['admin', 'profile'])
+        $eloquentComments = EloquentComment::with(['admin', 'profile'])
                      ->orderBy('created_at', 'desc')
                      ->limit($limit)
-                     ->get();
+                     ->get()
+                     ->all();
+        
+        return CommentMapper::toDomainArray($eloquentComments);
     }
 }

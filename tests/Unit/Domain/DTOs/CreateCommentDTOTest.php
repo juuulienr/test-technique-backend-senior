@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\DTOs;
 
-use App\Domain\DTOs\CreateCommentDTO;
+use App\Application\DTOs\CreateCommentDTO;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
