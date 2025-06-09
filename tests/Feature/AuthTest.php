@@ -12,7 +12,7 @@ class AuthTest extends TestCase
 
     public function test_admin_can_register(): void
     {
-        $response = $this->postJson('/api/auth/register', [
+        $response = $this->postJson('/api/v1/auth/register', [
           'name' => 'Admin Test',
           'email' => 'admin@test.com',
           'password' => 'password123',
@@ -30,7 +30,7 @@ class AuthTest extends TestCase
           'password' => bcrypt('password123'),
         ]);
 
-        $response = $this->postJson('/api/auth/login', [
+        $response = $this->postJson('/api/v1/auth/login', [
           'email' => 'admin@test.com',
           'password' => 'password123',
         ]);
@@ -41,7 +41,7 @@ class AuthTest extends TestCase
 
     public function test_admin_cannot_register_with_invalid_email(): void
     {
-        $response = $this->postJson('/api/auth/register', [
+        $response = $this->postJson('/api/v1/auth/register', [
           'name' => 'Admin Test',
           'email' => 'invalid-email',
           'password' => 'password123',
@@ -54,7 +54,7 @@ class AuthTest extends TestCase
 
     public function test_admin_cannot_login_with_invalid_email(): void
     {
-        $response = $this->postJson('/api/auth/login', [
+        $response = $this->postJson('/api/v1/auth/login', [
           'email' => 'invalid-email',
           'password' => 'password123',
         ]);

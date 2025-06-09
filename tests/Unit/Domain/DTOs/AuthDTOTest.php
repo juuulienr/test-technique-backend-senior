@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\DTOs;
 
-use App\Domain\DTOs\AuthDTO;
+use App\Application\DTOs\AuthDTO;
 use App\Domain\ValueObjects\Email;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;

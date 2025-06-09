@@ -2,33 +2,48 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\UseCases\Auth;
+namespace App\Application\UseCases\Auth;
 
-use App\Domain\DTOs\AuthDTO;
+use App\Application\DTOs\AuthDTO;
+use App\Domain\Entities\Admin;
+use App\Domain\Exceptions\AuthenticationException;
+use App\Domain\Ports\PasswordHasherPortInterface;
+use App\Domain\Ports\TokenManagerPortInterface;
 use App\Domain\Repositories\AdminRepositoryInterface;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
+/**
+ * Use Case pour l'authentification d'un administrateur
+ */
 final class LoginUseCase
 {
     public function __construct(
-        private AdminRepositoryInterface $adminRepository
+        private AdminRepositoryInterface $adminRepository,
+        private PasswordHasherPortInterface $passwordHasher,
+        private TokenManagerPortInterface $tokenManager
     ) {
     }
 
+    /**
+     * Authentifie un admin et retourne un token
+     */
     public function execute(AuthDTO $authDTO): string
     {
+        // Rechercher l'admin par email
         $admin = $this->adminRepository->findByEmail($authDTO->email);
 
-        if (!$admin || !Hash::check($authDTO->password, $admin->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Les informations d\'identification fournies sont incorrectes.'],
-            ]);
+        if (!$admin) {
+            throw AuthenticationException::invalidCredentials();
+        }
+
+        // Vérifier le mot de passe
+        if (!$admin->verifyPassword($authDTO->password, [$this->passwordHasher, 'verify'])) {
+            throw AuthenticationException::invalidCredentials();
         }
 
         // Révoquer les anciens tokens pour la sécurité
-        $this->adminRepository->revokeAllTokens($admin);
+        $this->tokenManager->revokeAllTokens($admin->getId());
 
-        return $this->adminRepository->createAuthToken($admin);
+        // Créer un nouveau token
+        return $this->tokenManager->createToken($admin->getId());
     }
 }

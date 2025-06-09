@@ -5,41 +5,48 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repositories;
 
 use App\Domain\Repositories\AdminRepositoryInterface;
+use App\Domain\Entities\Admin as DomainAdmin;
+use App\Domain\ValueObjects\AdminId;
 use App\Domain\ValueObjects\Email;
-use App\Models\Admin;
+use App\Infrastructure\Mappers\AdminMapper;
+use App\Models\Admin as EloquentAdmin;
 
 final class EloquentAdminRepository implements AdminRepositoryInterface
 {
-    public function findByEmail(Email $email): ?Admin
+    public function findByEmail(Email $email): ?DomainAdmin
     {
-        return Admin::where('email', $email->value())->first();
+        $eloquentAdmin = EloquentAdmin::where('email', $email->value())->first();
+        
+        return $eloquentAdmin ? AdminMapper::toDomain($eloquentAdmin) : null;
     }
 
-    /**
-     * @param array<string, mixed> $data
-     */
-    public function create(array $data): Admin
+    public function save(DomainAdmin $admin): DomainAdmin
     {
-        return Admin::create($data);
+        $data = AdminMapper::toEloquentData($admin);
+        
+        if ($admin->getId()->getValue() > 1) {
+            // Mise à jour (ID > 1 car 1 est utilisé pour les nouveaux)
+            $eloquentAdmin = EloquentAdmin::findOrFail($admin->getId()->getValue());
+            $eloquentAdmin->update($data);
+        } else {
+            // Création
+            $eloquentAdmin = EloquentAdmin::create($data);
+        }
+        
+        return AdminMapper::toDomain($eloquentAdmin);
     }
 
     public function emailExists(Email $email): bool
     {
-        return Admin::where('email', $email->value())->exists();
+        return EloquentAdmin::where('email', $email->value())->exists();
     }
 
-    public function findById(int $id): ?Admin
+    public function findById(AdminId $id): ?DomainAdmin
     {
-        return Admin::find($id);
+        $eloquentAdmin = EloquentAdmin::find($id->getValue());
+        
+        return $eloquentAdmin ? AdminMapper::toDomain($eloquentAdmin) : null;
     }
 
-    public function revokeAllTokens(Admin $admin): void
-    {
-        $admin->tokens()->delete();
-    }
 
-    public function createAuthToken(Admin $admin, string $tokenName = 'auth_token'): string
-    {
-        return $admin->createToken($tokenName)->plainTextToken;
-    }
 }

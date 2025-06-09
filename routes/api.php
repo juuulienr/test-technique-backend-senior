@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
+use App\UI\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Api\Public\ProfileController as PublicProfileController;
 use App\UI\Http\Controllers\Api\Admin\CommentController;

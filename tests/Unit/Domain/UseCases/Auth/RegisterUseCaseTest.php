@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\UseCases\Auth;
 
-use App\Domain\DTOs\AuthDTO;
-use App\Domain\UseCases\Auth\RegisterUseCase;
+use App\Application\DTOs\AuthDTO;
+use App\Application\UseCases\Auth\RegisterUseCase;
+use App\Domain\Exceptions\AuthenticationException;
 use App\Models\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use InvalidArgumentException;
 use Tests\TestCase;
 use App\Domain\Repositories\AdminRepositoryInterface;
+use App\Domain\Ports\PasswordHasherPortInterface;
+use App\Domain\Ports\TokenManagerPortInterface;
 
 class RegisterUseCaseTest extends TestCase
 {
@@ -24,7 +27,9 @@ class RegisterUseCaseTest extends TestCase
         parent::setUp();
 
         $adminRepository = $this->app->make(AdminRepositoryInterface::class);
-        $this->useCase = new RegisterUseCase($adminRepository);
+        $passwordHasher = $this->app->make(PasswordHasherPortInterface::class);
+        $tokenManager = $this->app->make(TokenManagerPortInterface::class);
+        $this->useCase = new RegisterUseCase($adminRepository, $passwordHasher, $tokenManager);
     }
 
     public function test_it_registers_new_admin_successfully(): void
@@ -73,8 +78,8 @@ class RegisterUseCaseTest extends TestCase
         // Créer un admin existant
         Admin::factory()->create(['email' => 'existing@example.com']);
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Cet email est déjà utilisé');
+        $this->expectException(AuthenticationException::class);
+        $this->expectExceptionMessage('Cet email est déjà utilisé.');
 
         $authDTO = AuthDTO::forRegister(
             'New User',

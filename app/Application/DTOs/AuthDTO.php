@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\DTOs;
+namespace App\Application\DTOs;
 
 use App\Domain\ValueObjects\Email;
 
