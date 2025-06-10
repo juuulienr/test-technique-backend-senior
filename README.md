@@ -57,9 +57,9 @@ app/
 ### 🔗 Flux de Données (Architecture Hexagonale)
 
 ```
-HTTP Request → Controller → Application Service → Use Case → Domain Entity
-                ↓                                              ↓
-           JSON Response ← Resource ← DTO ← Repository Port ← Infrastructure Adapter
+HTTP Request → Controller → Request DTO → Application Service → Use Case → Domain Entity
+                ↓                                                            ↓
+           JSON Response ← (Direct Transform) ← Domain Entity ← Repository Port ← Infrastructure Adapter
 ```
 
 ## 🧱 Fonctionnalités principales
@@ -258,7 +258,7 @@ Types de tests inclus :
 docker-compose exec app ./vendor/bin/php-cs-fixer fix
 ```
 
-### Analyse statique : PHPStan (Niveau 8)
+### Analyse statique : PHPStan (Niveau 5)
 ```bash
 docker-compose exec app ./vendor/bin/phpstan analyse
 ```

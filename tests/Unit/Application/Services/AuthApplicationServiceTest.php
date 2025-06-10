@@ -81,4 +81,4 @@ class AuthApplicationServiceTest extends TestCase
 
         $this->service->login('nonexistent@test.com', 'any_password');
     }
-} 
+}

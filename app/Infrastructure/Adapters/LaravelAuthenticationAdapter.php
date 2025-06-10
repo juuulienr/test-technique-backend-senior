@@ -19,7 +19,7 @@ final class LaravelAuthenticationAdapter implements AuthenticationPortInterface
     public function authenticate(string $email, string $password): ?AdminId
     {
         $admin = Admin::where('email', $email)->first();
-        
+
         if (!$admin || !Hash::check($password, $admin->password)) {
             return null;
         }
@@ -30,7 +30,7 @@ final class LaravelAuthenticationAdapter implements AuthenticationPortInterface
     public function generateToken(AdminId $adminId): string
     {
         $admin = Admin::find($adminId->getValue());
-        
+
         if (!$admin) {
             throw new \InvalidArgumentException('Admin not found');
         }
@@ -41,7 +41,7 @@ final class LaravelAuthenticationAdapter implements AuthenticationPortInterface
     public function validateToken(string $token): ?AdminId
     {
         $tokenModel = \Laravel\Sanctum\PersonalAccessToken::findToken($token);
-        
+
         if (!$tokenModel || !$tokenModel->tokenable instanceof Admin) {
             return null;
         }
@@ -52,9 +52,9 @@ final class LaravelAuthenticationAdapter implements AuthenticationPortInterface
     public function revokeToken(string $token): void
     {
         $tokenModel = \Laravel\Sanctum\PersonalAccessToken::findToken($token);
-        
+
         if ($tokenModel) {
             $tokenModel->delete();
         }
     }
-} 
+}

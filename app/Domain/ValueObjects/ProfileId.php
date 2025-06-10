@@ -27,4 +27,4 @@ final class ProfileId
     {
         return (string) $this->value;
     }
-} 
+}

@@ -166,4 +166,4 @@ class ProfileApplicationServiceTest extends TestCase
 
         return $this->service->createProfile($createProfileDTO, $image);
     }
-} 
+}

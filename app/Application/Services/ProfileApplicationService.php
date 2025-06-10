@@ -87,7 +87,7 @@ final class ProfileApplicationService
     public function isProfileOwnedByAdmin(ProfileId $profileId, AdminId $adminId): bool
     {
         $profile = $this->profileRepository->findById($profileId);
-        
+
         return $profile && $profile->isOwnedBy($adminId);
     }
-} 
+}

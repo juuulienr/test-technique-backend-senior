@@ -26,4 +26,4 @@ final class GetCommentsByProfileUseCase
     {
         return $this->commentRepository->findByProfileId($profileId);
     }
-} 
+}

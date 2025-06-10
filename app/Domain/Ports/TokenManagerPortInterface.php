@@ -26,4 +26,4 @@ interface TokenManagerPortInterface
      * Valide un token et retourne l'ID de l'admin associé
      */
     public function validateToken(string $token): ?AdminId;
-} 
+}

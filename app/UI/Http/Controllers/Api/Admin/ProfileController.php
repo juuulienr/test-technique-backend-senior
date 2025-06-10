@@ -38,7 +38,7 @@ class ProfileController extends Controller
             );
 
             $profile = $this->profileApplicationService->createProfile(
-                $createProfileDTO, 
+                $createProfileDTO,
                 $request->file('image')
             );
 

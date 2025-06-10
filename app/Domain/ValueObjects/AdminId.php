@@ -27,4 +27,4 @@ final class AdminId
     {
         return (string) $this->value;
     }
-} 
+}

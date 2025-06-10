@@ -106,4 +106,4 @@ final class Admin
             new DateTimeImmutable()
         );
     }
-} 
+}

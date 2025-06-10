@@ -27,4 +27,4 @@ final class CommentId
     {
         return (string) $this->value;
     }
-} 
+}

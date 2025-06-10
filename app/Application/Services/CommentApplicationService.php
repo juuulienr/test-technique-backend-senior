@@ -39,4 +39,4 @@ final class CommentApplicationService
     {
         return $this->getCommentsByProfileUseCase->execute($profileId);
     }
-} 
+}

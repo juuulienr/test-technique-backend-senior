@@ -42,7 +42,7 @@ final class RegisterUseCase
 
         // Créer l'entité Admin avec mot de passe hashé
         $hashedPassword = $this->passwordHasher->hash($authDTO->password);
-        
+
         $admin = new Admin(
             id: new AdminId(1), // Temporaire, sera défini par le repository
             name: $authDTO->name,

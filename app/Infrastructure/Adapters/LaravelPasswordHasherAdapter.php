@@ -21,4 +21,4 @@ final class LaravelPasswordHasherAdapter implements PasswordHasherPortInterface
     {
         return Hash::check($password, $hash);
     }
-} 
+}

@@ -17,14 +17,14 @@ final class EloquentCommentRepository implements CommentRepositoryInterface
     public function findById(CommentId $id): ?DomainComment
     {
         $eloquentComment = EloquentComment::find($id->getValue());
-        
+
         return $eloquentComment ? CommentMapper::toDomain($eloquentComment) : null;
     }
 
     public function save(DomainComment $comment): DomainComment
     {
         $data = CommentMapper::toEloquentData($comment);
-        
+
         if ($comment->getId()->getValue() > 1) {
             // Mise à jour (ID > 1 car 1 est utilisé pour les nouveaux)
             $eloquentComment = EloquentComment::findOrFail($comment->getId()->getValue());
@@ -33,7 +33,7 @@ final class EloquentCommentRepository implements CommentRepositoryInterface
             // Création
             $eloquentComment = EloquentComment::create($data);
         }
-        
+
         return CommentMapper::toDomain($eloquentComment);
     }
 
@@ -59,7 +59,7 @@ final class EloquentCommentRepository implements CommentRepositoryInterface
                      ->orderBy('created_at', 'desc')
                      ->get()
                      ->all();
-        
+
         return CommentMapper::toDomainArray($eloquentComments);
     }
 
@@ -73,7 +73,7 @@ final class EloquentCommentRepository implements CommentRepositoryInterface
                      ->orderBy('created_at', 'desc')
                      ->get()
                      ->all();
-        
+
         return CommentMapper::toDomainArray($eloquentComments);
     }
 
@@ -97,7 +97,7 @@ final class EloquentCommentRepository implements CommentRepositoryInterface
                      ->limit($limit)
                      ->get()
                      ->all();
-        
+
         return CommentMapper::toDomainArray($eloquentComments);
     }
 }

@@ -76,4 +76,4 @@ final class LaravelImageManagerAdapter implements ImageManagerPortInterface
 
         return asset('storage/' . $imagePath);
     }
-} 
+}

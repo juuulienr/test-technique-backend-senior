@@ -26,7 +26,7 @@ final class AuthApplicationService
     public function login(string $email, string $password): string
     {
         $authDTO = AuthDTO::forLogin($email, $password);
-        
+
         return $this->loginUseCase->execute($authDTO);
     }
 
@@ -36,7 +36,7 @@ final class AuthApplicationService
     public function register(string $name, string $email, string $password): string
     {
         $authDTO = AuthDTO::forRegister($name, $email, $password);
-        
+
         return $this->registerUseCase->execute($authDTO);
     }
-} 
+}

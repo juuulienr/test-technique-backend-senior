@@ -16,14 +16,14 @@ final class LaravelTokenManagerAdapter implements TokenManagerPortInterface
     public function createToken(AdminId $adminId, string $tokenName = 'auth_token'): string
     {
         $eloquentAdmin = EloquentAdmin::findOrFail($adminId->getValue());
-        
+
         return $eloquentAdmin->createToken($tokenName)->plainTextToken;
     }
 
     public function revokeAllTokens(AdminId $adminId): void
     {
         $eloquentAdmin = EloquentAdmin::find($adminId->getValue());
-        
+
         if ($eloquentAdmin) {
             $eloquentAdmin->tokens()->delete();
         }
@@ -32,11 +32,11 @@ final class LaravelTokenManagerAdapter implements TokenManagerPortInterface
     public function validateToken(string $token): ?AdminId
     {
         $tokenModel = \Laravel\Sanctum\PersonalAccessToken::findToken($token);
-        
+
         if (!$tokenModel || !$tokenModel->tokenable instanceof EloquentAdmin) {
             return null;
         }
 
         return new AdminId($tokenModel->tokenable->id);
     }
-} 
+}

@@ -180,4 +180,4 @@ final class Profile
             updatedAt: $this->updatedAt
         );
     }
-} 
+}

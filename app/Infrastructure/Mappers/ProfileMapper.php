@@ -24,7 +24,7 @@ final class ProfileMapper
     public static function toModel(ProfileEntity $entity): ProfileModel
     {
         $model = new ProfileModel();
-        
+
         // Si l'entité a un ID (pas nouveau), l'assigner
         if ($entity->getId()->getValue() > 0) {
             $model->id = $entity->getId()->getValue();
@@ -89,4 +89,4 @@ final class ProfileMapper
 
         return $model;
     }
-} 
+}

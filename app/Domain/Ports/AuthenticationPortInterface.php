@@ -31,4 +31,4 @@ interface AuthenticationPortInterface
      * Révoque un token
      */
     public function revokeToken(string $token): void;
-} 
+}

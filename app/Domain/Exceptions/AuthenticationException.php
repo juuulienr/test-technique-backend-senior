@@ -20,4 +20,4 @@ final class AuthenticationException extends DomainException
     {
         return new self('Cet email est déjà utilisé.');
     }
-} 
+}

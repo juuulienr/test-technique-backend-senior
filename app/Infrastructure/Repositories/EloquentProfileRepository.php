@@ -17,7 +17,7 @@ final class EloquentProfileRepository implements ProfileRepositoryInterface
     public function findById(ProfileId $id): ?ProfileEntity
     {
         $model = ProfileModel::find($id->getValue());
-        
+
         return $model ? ProfileMapper::toDomain($model) : null;
     }
 
@@ -27,7 +27,7 @@ final class EloquentProfileRepository implements ProfileRepositoryInterface
         if ($profile->getId()->getValue() === 0) {
             $model = ProfileMapper::toModel($profile);
             $model->save();
-            
+
             // Retourner l'entité avec le nouvel ID
             return $profile->withId(new ProfileId($model->id));
         }
@@ -52,7 +52,7 @@ final class EloquentProfileRepository implements ProfileRepositoryInterface
     public function findByStatus(ProfileStatut $statut): array
     {
         $models = ProfileModel::where('statut', $statut->value)->get();
-        
+
         return ProfileMapper::toDomainArray($models);
     }
 
@@ -62,7 +62,7 @@ final class EloquentProfileRepository implements ProfileRepositoryInterface
     public function findActiveProfiles(): array
     {
         $models = ProfileModel::where('statut', ProfileStatut::ACTIF->value)->get();
-        
+
         return ProfileMapper::toDomainArray($models);
     }
 
@@ -72,7 +72,7 @@ final class EloquentProfileRepository implements ProfileRepositoryInterface
     public function findByAdminId(AdminId $adminId): array
     {
         $models = ProfileModel::where('admin_id', $adminId->getValue())->get();
-        
+
         return ProfileMapper::toDomainArray($models);
     }
 

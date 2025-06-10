@@ -19,4 +19,4 @@ interface PasswordHasherPortInterface
      * Vérifie si un mot de passe en clair correspond au hash
      */
     public function verify(string $password, string $hash): bool;
-} 
+}

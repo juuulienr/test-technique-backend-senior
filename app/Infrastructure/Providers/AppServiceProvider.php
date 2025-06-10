@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AdminRepositoryInterface::class, EloquentAdminRepository::class);
         $this->app->bind(ProfileRepositoryInterface::class, EloquentProfileRepository::class);
         $this->app->bind(CommentRepositoryInterface::class, EloquentCommentRepository::class);
-        
+
         // Liaison des ports avec leurs adaptateurs
         $this->app->bind(PasswordHasherPortInterface::class, LaravelPasswordHasherAdapter::class);
         $this->app->bind(TokenManagerPortInterface::class, LaravelTokenManagerAdapter::class);

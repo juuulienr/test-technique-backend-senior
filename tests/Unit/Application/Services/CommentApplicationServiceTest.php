@@ -70,4 +70,4 @@ class CommentApplicationServiceTest extends TestCase
 
         $this->assertCount(2, $comments);
     }
-} 
+}

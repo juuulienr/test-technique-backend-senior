@@ -59,8 +59,8 @@ final class CommentMapper
     public static function toDomainArray(array $eloquentComments): array
     {
         return array_map(
-            fn(EloquentComment $comment) => self::toDomain($comment),
+            fn (EloquentComment $comment) => self::toDomain($comment),
             $eloquentComments
         );
     }
-} 
+}

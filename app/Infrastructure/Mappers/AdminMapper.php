@@ -49,4 +49,4 @@ final class AdminMapper
 
         return $data;
     }
-} 
+}

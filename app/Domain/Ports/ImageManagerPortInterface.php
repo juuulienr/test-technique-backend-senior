@@ -34,4 +34,4 @@ interface ImageManagerPortInterface
      * Retourne l'URL publique d'une image
      */
     public function getUrl(?string $imagePath): ?string;
-} 
+}
