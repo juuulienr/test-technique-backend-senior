@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Admin;
+use App\Infrastructure\Models\Admin;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Infrastructure\Models\Admin>
  */
 class AdminFactory extends Factory
 {
@@ -34,7 +34,7 @@ class AdminFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'password' => static::$password ??= Hash::make('password')
+            'password' => static::$password ??= Hash::make('password'),
         ];
     }
 

@@ -8,7 +8,7 @@ use App\Domain\Entities\Comment as DomainComment;
 use App\Domain\ValueObjects\CommentId;
 use App\Domain\ValueObjects\AdminId;
 use App\Domain\ValueObjects\ProfileId;
-use App\Models\Comment as EloquentComment;
+use App\Infrastructure\Models\Comment as EloquentComment;
 use DateTimeImmutable;
 
 /**

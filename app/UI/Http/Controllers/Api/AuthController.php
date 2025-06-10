@@ -4,10 +4,10 @@ namespace App\UI\Http\Controllers\Api;
 
 use App\Application\Services\AuthApplicationService;
 use App\Domain\Exceptions\AuthenticationException;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterRequest;
-use App\Http\Requests\LoginRequest;
-use App\Http\Responses\ApiResponse;
+use App\UI\Http\Controllers\Controller;
+use App\UI\Http\Requests\RegisterRequest;
+use App\UI\Http\Requests\LoginRequest;
+use App\UI\Http\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use InvalidArgumentException;
 

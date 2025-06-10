@@ -6,7 +6,7 @@ namespace App\Infrastructure\Adapters;
 
 use App\Domain\Ports\TokenManagerPortInterface;
 use App\Domain\ValueObjects\AdminId;
-use App\Models\Admin as EloquentAdmin;
+use App\Infrastructure\Models\Admin as EloquentAdmin;
 
 /**
  * Adapter Laravel Sanctum pour la gestion des tokens

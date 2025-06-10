@@ -7,7 +7,7 @@ namespace Tests\Unit\Domain\UseCases\Auth;
 use App\Application\DTOs\AuthDTO;
 use App\Application\UseCases\Auth\RegisterUseCase;
 use App\Domain\Exceptions\AuthenticationException;
-use App\Models\Admin;
+use App\Infrastructure\Models\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use InvalidArgumentException;

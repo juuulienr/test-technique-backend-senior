@@ -10,8 +10,8 @@ use App\Domain\Entities\Comment;
 use App\Domain\Repositories\CommentRepositoryInterface;
 use App\Domain\ValueObjects\AdminId;
 use App\Domain\ValueObjects\ProfileId;
-use App\Models\Admin;
-use App\Models\Profile;
+use App\Infrastructure\Models\Admin;
+use App\Infrastructure\Models\Profile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use InvalidArgumentException;
 use Tests\TestCase;
@@ -61,7 +61,7 @@ class CreateCommentUseCaseTest extends TestCase
         $profile = Profile::factory()->create();
 
         // Créer un commentaire existant en base
-        \App\Models\Comment::factory()->create([
+        \App\Infrastructure\Models\Comment::factory()->create([
             'admin_id' => $admin->id,
             'profile_id' => $profile->id,
         ]);
@@ -102,7 +102,7 @@ class CreateCommentUseCaseTest extends TestCase
         $comment2 = $this->useCase->execute($dto2);
 
         $this->assertNotEquals($comment1->getId()->getValue(), $comment2->getId()->getValue());
-        $this->assertEquals(2, \App\Models\Comment::where('profile_id', $profile->id)->count());
+        $this->assertEquals(2, \App\Infrastructure\Models\Comment::where('profile_id', $profile->id)->count());
     }
 
     public function test_it_allows_same_admin_to_comment_different_profiles(): void
@@ -127,6 +127,6 @@ class CreateCommentUseCaseTest extends TestCase
         $comment2 = $this->useCase->execute($dto2);
 
         $this->assertNotEquals($comment1->getId()->getValue(), $comment2->getId()->getValue());
-        $this->assertEquals(2, \App\Models\Comment::where('admin_id', $admin->id)->count());
+        $this->assertEquals(2, \App\Infrastructure\Models\Comment::where('admin_id', $admin->id)->count());
     }
 }

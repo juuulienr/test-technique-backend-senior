@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Admin;
+use App\Infrastructure\Models\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -20,7 +20,7 @@ class ProfileTest extends TestCase
         $token = $admin->createToken('test_token')->plainTextToken;
 
         $response = $this->withHeader('Authorization', "Bearer {$token}")
-          ->postJson('/api/admin/profiles', [
+          ->postJson('/api/v1/admin/profiles', [
             'nom' => 'Jean',
             'prenom' => 'Dupont',
             'statut' => 'en attente',
@@ -35,8 +35,10 @@ class ProfileTest extends TestCase
                  ])
                  ->assertJson(['success' => true]);
 
-        $imagePath = 'images/' . basename($response['data']['image']);
-        $this->assertTrue(Storage::disk('public')->exists($imagePath), "L'image n'existe pas dans le stockage");
+        // Extraire le chemin de l'image depuis l'URL retournée
+        $imageUrl = $response['data']['image'];
+        $imagePath = str_replace('/storage/', '', parse_url($imageUrl, PHP_URL_PATH));
+        $this->assertTrue(Storage::disk('public')->exists($imagePath), "L'image n'existe pas dans le stockage : $imagePath");
     }
 
 
@@ -47,7 +49,7 @@ class ProfileTest extends TestCase
         $admin = Admin::factory()->create();
         $token = $admin->createToken('token')->plainTextToken;
 
-        $responseCreate = $this->withToken($token)->postJson('/api/admin/profiles', [
+        $responseCreate = $this->withToken($token)->postJson('/api/v1/admin/profiles', [
           'nom' => 'John',
           'prenom' => 'Doe',
           'statut' => 'en attente',
@@ -56,7 +58,7 @@ class ProfileTest extends TestCase
 
         $profileId = $responseCreate['data']['id'];
 
-        $responseUpdate = $this->withToken($token)->putJson("/api/admin/profiles/{$profileId}", [
+        $responseUpdate = $this->withToken($token)->putJson("/api/v1/admin/profiles/{$profileId}", [
           'nom' => 'Jean',
         ]);
 
@@ -72,7 +74,7 @@ class ProfileTest extends TestCase
         $admin = Admin::factory()->create();
         $token = $admin->createToken('token')->plainTextToken;
 
-        $responseCreate = $this->withToken($token)->postJson('/api/admin/profiles', [
+        $responseCreate = $this->withToken($token)->postJson('/api/v1/admin/profiles', [
           'nom' => 'John',
           'prenom' => 'Doe',
           'statut' => 'en attente',
@@ -81,7 +83,7 @@ class ProfileTest extends TestCase
 
         $profileId = $responseCreate['data']['id'];
 
-        $responseDelete = $this->withToken($token)->deleteJson("/api/admin/profiles/{$profileId}");
+        $responseDelete = $this->withToken($token)->deleteJson("/api/v1/admin/profiles/{$profileId}");
 
         $responseDelete->assertStatus(200)
                       ->assertJson([
@@ -102,7 +104,7 @@ class ProfileTest extends TestCase
           'statut' => 'actif',
         ]);
 
-        $response = $this->getJson('/api/profiles');
+        $response = $this->getJson('/api/v1/profiles');
 
         $response->assertStatus(200)
                 ->assertJsonMissing(['statut']);
@@ -121,7 +123,7 @@ class ProfileTest extends TestCase
           'statut' => 'actif',
         ]);
 
-        $response = $this->withToken($token)->getJson('/api/profiles');
+        $response = $this->withToken($token)->getJson('/api/v1/profiles');
 
         $response->assertStatus(200)
                 ->assertJsonFragment(['statut' => 'actif']);

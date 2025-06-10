@@ -10,8 +10,8 @@ use App\Application\UseCases\Comment\CreateCommentUseCase;
 use App\Application\UseCases\Comment\GetCommentsByProfileUseCase;
 use App\Domain\Entities\Comment;
 use App\Domain\ValueObjects\ProfileId;
-use App\Models\Admin;
-use App\Models\Profile;
+use App\Infrastructure\Models\Admin;
+use App\Infrastructure\Models\Profile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -53,13 +53,13 @@ class CommentApplicationServiceTest extends TestCase
         $profile = Profile::factory()->create();
 
         // Créer quelques commentaires en base
-        \App\Models\Comment::factory()->create([
+        \App\Infrastructure\Models\Comment::factory()->create([
             'admin_id' => $admin->id,
             'profile_id' => $profile->id,
             'contenu' => 'Premier commentaire'
         ]);
 
-        \App\Models\Comment::factory()->create([
+        \App\Infrastructure\Models\Comment::factory()->create([
             'admin_id' => $admin->id,
             'profile_id' => $profile->id,
             'contenu' => 'Deuxième commentaire'

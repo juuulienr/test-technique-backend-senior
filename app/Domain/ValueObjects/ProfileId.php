@@ -8,8 +8,8 @@ final class ProfileId
 {
     public function __construct(private int $value)
     {
-        if ($value <= 0) {
-            throw new \InvalidArgumentException('Profile ID must be positive');
+        if ($value < 0) {
+            throw new \InvalidArgumentException('Profile ID must be non-negative');
         }
     }
 

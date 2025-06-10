@@ -4,28 +4,22 @@ declare(strict_types=1);
 
 namespace App\Domain\Repositories;
 
-use App\Enums\ProfileStatut;
-use App\Models\Profile;
-use Illuminate\Database\Eloquent\Collection;
+use App\Domain\Entities\Profile;
+use App\Domain\ValueObjects\ProfileId;
+use App\Domain\ValueObjects\AdminId;
+use App\Domain\ValueObjects\ProfileStatut;
 
 interface ProfileRepositoryInterface
 {
     /**
      * Trouve un profil par son ID
      */
-    public function findById(int $id): ?Profile;
+    public function findById(ProfileId $id): ?Profile;
 
     /**
-     * Crée un nouveau profil
-     * @param array<string, mixed> $data
+     * Sauvegarde un profil (création ou mise à jour)
      */
-    public function create(array $data): Profile;
-
-    /**
-     * Met à jour un profil
-     * @param array<string, mixed> $data
-     */
-    public function update(Profile $profile, array $data): Profile;
+    public function save(Profile $profile): Profile;
 
     /**
      * Supprime un profil
@@ -34,29 +28,29 @@ interface ProfileRepositoryInterface
 
     /**
      * Récupère tous les profils avec un statut donné
-     * @return Collection<int, Profile>
+     * @return Profile[]
      */
-    public function findByStatus(ProfileStatut $statut): Collection;
+    public function findByStatus(ProfileStatut $statut): array;
 
     /**
      * Récupère tous les profils actifs (pour l'API publique)
-     * @return Collection<int, Profile>
+     * @return Profile[]
      */
-    public function findActiveProfiles(): Collection;
+    public function findActiveProfiles(): array;
 
     /**
      * Récupère les profils d'un admin
-     * @return Collection<int, Profile>
+     * @return Profile[]
      */
-    public function findByAdminId(int $adminId): Collection;
+    public function findByAdminId(AdminId $adminId): array;
 
     /**
      * Compte le nombre de profils d'un admin
      */
-    public function countByAdminId(int $adminId): int;
+    public function countByAdminId(AdminId $adminId): int;
 
     /**
-     * Trouve les profils avec leurs commentaires
+     * Vérifie si un profil existe
      */
-    public function findWithComments(int $profileId): ?Profile;
+    public function exists(ProfileId $id): bool;
 }

@@ -6,7 +6,7 @@ namespace Tests\Unit\Application\Services;
 
 use App\Application\Services\AuthApplicationService;
 use App\Domain\Exceptions\AuthenticationException;
-use App\Models\Admin;
+use App\Infrastructure\Models\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;

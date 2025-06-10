@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\DTOs;
+namespace App\Application\DTOs;
 
 use App\Domain\ValueObjects\PersonName;
-use App\Enums\ProfileStatut;
+use App\Domain\ValueObjects\ProfileStatut;
 
 final readonly class CreateProfileDTO
 {

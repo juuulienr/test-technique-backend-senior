@@ -7,7 +7,7 @@ namespace App\Infrastructure\Mappers;
 use App\Domain\Entities\Admin as DomainAdmin;
 use App\Domain\ValueObjects\AdminId;
 use App\Domain\ValueObjects\Email;
-use App\Models\Admin as EloquentAdmin;
+use App\Infrastructure\Models\Admin as EloquentAdmin;
 use DateTimeImmutable;
 
 /**

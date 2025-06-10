@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\Api\Public;
+namespace App\UI\Http\Controllers\Api\Public;
 
-use App\Domain\Repositories\ProfileRepositoryInterface;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\ProfileResource;
+use App\Application\Services\ProfileApplicationService;
+use App\UI\Http\Controllers\Controller;
+use App\UI\Http\Resources\ProfileResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProfileController extends Controller
 {
     public function __construct(
-        private ProfileRepositoryInterface $profileRepository
+        private ProfileApplicationService $profileApplicationService
     ) {
     }
 
     public function index(): AnonymousResourceCollection
     {
-        $profils = $this->profileRepository->findActiveProfiles();
+        $profils = $this->profileApplicationService->getActiveProfiles();
 
         return ProfileResource::collection($profils);
     }

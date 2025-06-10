@@ -4,77 +4,85 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repositories;
 
+use App\Domain\Entities\Profile as ProfileEntity;
 use App\Domain\Repositories\ProfileRepositoryInterface;
-use App\Enums\ProfileStatut;
-use App\Models\Profile;
-use Illuminate\Database\Eloquent\Collection;
+use App\Domain\ValueObjects\ProfileId;
+use App\Domain\ValueObjects\AdminId;
+use App\Infrastructure\Mappers\ProfileMapper;
+use App\Infrastructure\Models\Profile as ProfileModel;
+use App\Domain\ValueObjects\ProfileStatut;
 
 final class EloquentProfileRepository implements ProfileRepositoryInterface
 {
-    public function findById(int $id): ?Profile
+    public function findById(ProfileId $id): ?ProfileEntity
     {
-        return Profile::find($id);
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     */
-    public function create(array $data): Profile
-    {
-        return Profile::create($data);
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     */
-    public function update(Profile $profile, array $data): Profile
-    {
-        $profile->update($data);
-        $freshProfile = $profile->fresh();
+        $model = ProfileModel::find($id->getValue());
         
-        if ($freshProfile === null) {
-            throw new \RuntimeException('Le profil n\'existe plus après la mise à jour');
+        return $model ? ProfileMapper::toDomain($model) : null;
+    }
+
+    public function save(ProfileEntity $profile): ProfileEntity
+    {
+        // Si c'est un nouveau profil (ID = 0)
+        if ($profile->getId()->getValue() === 0) {
+            $model = ProfileMapper::toModel($profile);
+            $model->save();
+            
+            // Retourner l'entité avec le nouvel ID
+            return $profile->withId(new ProfileId($model->id));
         }
+
+        // Mise à jour d'un profil existant
+        $model = ProfileModel::findOrFail($profile->getId()->getValue());
+        ProfileMapper::updateModel($model, $profile);
+        $model->save();
+
+        return ProfileMapper::toDomain($model);
+    }
+
+    public function delete(ProfileEntity $profile): void
+    {
+        $model = ProfileModel::findOrFail($profile->getId()->getValue());
+        $model->delete();
+    }
+
+    /**
+     * @return ProfileEntity[]
+     */
+    public function findByStatus(ProfileStatut $statut): array
+    {
+        $models = ProfileModel::where('statut', $statut->value)->get();
         
-        return $freshProfile;
-    }
-
-    public function delete(Profile $profile): void
-    {
-        $profile->delete();
+        return ProfileMapper::toDomainArray($models);
     }
 
     /**
-     * @return Collection<int, Profile>
+     * @return ProfileEntity[]
      */
-    public function findByStatus(ProfileStatut $statut): Collection
+    public function findActiveProfiles(): array
     {
-        return Profile::where('statut', $statut->value)->get();
+        $models = ProfileModel::where('statut', ProfileStatut::ACTIF->value)->get();
+        
+        return ProfileMapper::toDomainArray($models);
     }
 
     /**
-     * @return Collection<int, Profile>
+     * @return ProfileEntity[]
      */
-    public function findActiveProfiles(): Collection
+    public function findByAdminId(AdminId $adminId): array
     {
-        return Profile::where('statut', ProfileStatut::ACTIF->value)->get();
+        $models = ProfileModel::where('admin_id', $adminId->getValue())->get();
+        
+        return ProfileMapper::toDomainArray($models);
     }
 
-    /**
-     * @return Collection<int, Profile>
-     */
-    public function findByAdminId(int $adminId): Collection
+    public function countByAdminId(AdminId $adminId): int
     {
-        return Profile::where('admin_id', $adminId)->get();
+        return ProfileModel::where('admin_id', $adminId->getValue())->count();
     }
 
-    public function countByAdminId(int $adminId): int
+    public function exists(ProfileId $id): bool
     {
-        return Profile::where('admin_id', $adminId)->count();
-    }
-
-    public function findWithComments(int $profileId): ?Profile
-    {
-        return Profile::with('comments')->find($profileId);
+        return ProfileModel::where('id', $id->getValue())->exists();
     }
 }

@@ -4,14 +4,14 @@ namespace App\UI\Http\Controllers\Api\Admin;
 
 use App\Application\DTOs\CreateCommentDTO;
 use App\Application\Services\CommentApplicationService;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Comment\StoreCommentRequest;
-use App\Http\Responses\ApiResponse;
-use App\Models\Profile;
+use App\UI\Http\Controllers\Controller;
+use App\UI\Http\Requests\Comment\StoreCommentRequest;
+use App\UI\Http\Responses\ApiResponse;
+use App\Infrastructure\Models\Profile;
 use App\Domain\ValueObjects\AdminId;
 use App\Domain\ValueObjects\ProfileId;
 use Illuminate\Http\JsonResponse;
-use App\Models\Admin;
+use App\Infrastructure\Models\Admin;
 
 class CommentController extends Controller
 {

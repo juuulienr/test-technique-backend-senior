@@ -9,7 +9,7 @@ use App\Domain\Entities\Admin as DomainAdmin;
 use App\Domain\ValueObjects\AdminId;
 use App\Domain\ValueObjects\Email;
 use App\Infrastructure\Mappers\AdminMapper;
-use App\Models\Admin as EloquentAdmin;
+use App\Infrastructure\Models\Admin as EloquentAdmin;
 
 final class EloquentAdminRepository implements AdminRepositoryInterface
 {

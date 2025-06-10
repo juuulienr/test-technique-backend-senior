@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\DTOs;
 
-use App\Domain\DTOs\CreateProfileDTO;
+use App\Application\DTOs\CreateProfileDTO;
 use App\Domain\ValueObjects\PersonName;
-use App\Enums\ProfileStatut;
+use App\Domain\ValueObjects\ProfileStatut;
 use PHPUnit\Framework\TestCase;
 
 class CreateProfileDTOTest extends TestCase

@@ -2,31 +2,36 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\UseCases\Profile;
+namespace App\Application\UseCases\Profile;
 
-use App\Domain\DTOs\CreateProfileDTO;
+use App\Application\DTOs\CreateProfileDTO;
+use App\Domain\Entities\Profile;
 use App\Domain\Repositories\ProfileRepositoryInterface;
-use App\Models\Profile;
-use App\Services\ImageService;
-use Illuminate\Http\UploadedFile;
+use App\Domain\Ports\ImageManagerPortInterface;
+use App\Domain\ValueObjects\AdminId;
 
 final class CreateProfileUseCase
 {
     public function __construct(
         private ProfileRepositoryInterface $profileRepository,
-        private ImageService $imageService
+        private ImageManagerPortInterface $imageManager
     ) {
     }
 
-    public function execute(CreateProfileDTO $createProfileDTO, UploadedFile $imageFile): Profile
+    public function execute(CreateProfileDTO $createProfileDTO, mixed $imageFile): Profile
     {
-        // Upload de l'image
-        $imagePath = $this->imageService->upload($imageFile, 'profiles');
+        // Upload de l'image via le port
+        $imagePath = $this->imageManager->upload($imageFile, 'profiles');
 
-        // Création du profil avec le chemin de l'image uploadée
-        $profileData = $createProfileDTO->toArray();
-        $profileData['image'] = $imagePath;
+        // Créer l'entité Profile Domain
+        $profile = Profile::create(
+            name: $createProfileDTO->name,
+            statut: $createProfileDTO->statut,
+            imagePath: $imagePath,
+            adminId: new AdminId($createProfileDTO->adminId)
+        );
 
-        return $this->profileRepository->create($profileData);
+        // Sauvegarder via le repository
+        return $this->profileRepository->save($profile);
     }
 }

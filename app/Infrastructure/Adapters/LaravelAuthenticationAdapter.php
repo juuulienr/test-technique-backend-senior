@@ -6,7 +6,7 @@ namespace App\Infrastructure\Adapters;
 
 use App\Domain\Ports\AuthenticationPortInterface;
 use App\Domain\ValueObjects\AdminId;
-use App\Models\Admin;
+use App\Infrastructure\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 

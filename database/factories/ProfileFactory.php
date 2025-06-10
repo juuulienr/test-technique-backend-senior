@@ -2,16 +2,23 @@
 
 namespace Database\Factories;
 
-use App\Models\Profile;
-use App\Models\Admin;
-use App\Enums\ProfileStatut;
+use App\Infrastructure\Models\Profile;
+use App\Infrastructure\Models\Admin;
+use App\Domain\ValueObjects\ProfileStatut;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Profile>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Infrastructure\Models\Profile>
  */
 class ProfileFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Profile::class;
+
     /**
      * Define the model's default state.
      *
