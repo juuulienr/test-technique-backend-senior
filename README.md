@@ -57,9 +57,31 @@ app/
 ### 🔗 Flux de Données (Architecture Hexagonale)
 
 ```
-HTTP Request → Controller → Request DTO → Application Service → Use Case → Domain Entity
-                ↓                                                            ↓
-           JSON Response ← (Direct Transform) ← Domain Entity ← Repository Port ← Infrastructure Adapter
+🌐 HTTP Request 
+    ↓
+🛡️ Middlewares (Auth, Throttle, Admin)
+    ↓  
+✅ Form Request Validation
+    ↓
+🎮 Controller
+    ↓
+📦 Request DTO (avec Value Objects)
+    ↓
+📋 Application Service
+    ↓
+🎯 Use Case (Logique Métier)
+    ↓
+💎 Domain Entity ←→ 🔌 Ports (Interfaces)
+    ↓                      ↓
+🏠 Repository Port    📸 Service Ports (Image, Hash, etc.)
+    ↓                      ↓
+🔄 Mapper            🔧 Infrastructure Adapters
+    ↓                      
+🗃️ Eloquent Model
+    ↓
+💾 Database
+
+📡 Retour : Domain Entity → Controller → JSON Response
 ```
 
 ## 🧱 Fonctionnalités principales
