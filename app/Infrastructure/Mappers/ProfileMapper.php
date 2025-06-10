@@ -11,6 +11,7 @@ use App\Domain\ValueObjects\AdminId;
 use App\Infrastructure\Models\Profile as ProfileModel;
 use App\Domain\ValueObjects\ProfileStatut;
 use DateTimeImmutable;
+use Illuminate\Support\Carbon;
 
 /**
  * Mapper pour convertir entre entité Profile et modèle Eloquent
@@ -32,11 +33,11 @@ final class ProfileMapper
 
         $model->nom = $entity->getName()->nom();
         $model->prenom = $entity->getName()->prenom();
-        $model->statut = $entity->getStatut()->value;
+        $model->statut = ProfileStatut::from($entity->getStatut()->value);
         $model->image = $entity->getImagePath();
         $model->admin_id = $entity->getAdminId()->getValue();
-        $model->created_at = $entity->getCreatedAt();
-        $model->updated_at = $entity->getUpdatedAt();
+        $model->created_at = Carbon::createFromFormat('Y-m-d H:i:s', $entity->getCreatedAt()->format('Y-m-d H:i:s'));
+        $model->updated_at = Carbon::createFromFormat('Y-m-d H:i:s', $entity->getUpdatedAt()->format('Y-m-d H:i:s'));
 
         return $model;
     }
@@ -46,9 +47,8 @@ final class ProfileMapper
      */
     public static function toDomain(ProfileModel $model): ProfileEntity
     {
-        $statut = $model->statut instanceof ProfileStatut 
-            ? $model->statut 
-            : ProfileStatut::from($model->statut);
+        // Le cast Eloquent assure que $model->statut est toujours un ProfileStatut
+        $statut = $model->statut;
 
         return ProfileEntity::fromPersistence(
             id: new ProfileId($model->id),
@@ -82,10 +82,10 @@ final class ProfileMapper
     {
         $model->nom = $entity->getName()->nom();
         $model->prenom = $entity->getName()->prenom();
-        $model->statut = $entity->getStatut()->value;
+        $model->statut = ProfileStatut::from($entity->getStatut()->value);
         $model->image = $entity->getImagePath();
         $model->admin_id = $entity->getAdminId()->getValue();
-        $model->updated_at = $entity->getUpdatedAt();
+        $model->updated_at = Carbon::createFromFormat('Y-m-d H:i:s', $entity->getUpdatedAt()->format('Y-m-d H:i:s'));
 
         return $model;
     }

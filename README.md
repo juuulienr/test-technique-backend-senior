@@ -1,13 +1,13 @@
 # 🚀 Test Technique Laravel - Architecture Hexagonale
 
 Ce projet est une API développée avec **Laravel 11** et **Architecture Hexagonale**, dans le cadre d'un test technique pour un poste back-end senior.  
-Elle met en œuvre les bonnes pratiques de Clean Architecture, DDD, SOLID, et les patterns avancés de développement.
+Elle met en œuvre les bonnes pratiques d'Architecture Hexagonale, DDD, SOLID, et les patterns avancés de développement.
 
 ---
 
-## 🏗️ Architecture Hexagonale (Clean Architecture)
+## 🏗️ Architecture Hexagonale
 
-Ce projet implémente une **architecture hexagonale ** :
+Ce projet implémente une **architecture hexagonale** (Ports & Adapters Pattern) :
 
 ### 📋 Structure des Couches
 
@@ -46,20 +46,20 @@ app/
 
 ### 🎯 Principes Appliqués
 
-- **🔄 Dependency Inversion** : Domain ne dépend de rien
-- **🚪 Ports & Adapters** : Interfaces pour services externes
-- **🎭 Use Cases** : Logique métier encapsulée
-- **💎 Pure Entities** : Zero dépendance framework
+- **🔄 Dependency Inversion** : Le domaine ne dépend d'aucune couche externe
+- **🚪 Ports & Adapters** : Interfaces pour découpler le domaine de l'infrastructure
+- **🎭 Use Cases** : Logique applicative encapsulée
+- **💎 Pure Domain** : Entités métier sans dépendance framework
 - **🔀 CQRS Pattern** : Séparation commandes/queries
 - **📦 DDD** : Domain-Driven Design
 - **🏛️ SOLID** : Tous les principes respectés
 
-### 🔗 Flux de Données
+### 🔗 Flux de Données (Architecture Hexagonale)
 
 ```
 HTTP Request → Controller → Application Service → Use Case → Domain Entity
                 ↓                                              ↓
-           JSON Response ← Resource ← DTO ← Repository ← Infrastructure
+           JSON Response ← Resource ← DTO ← Repository Port ← Infrastructure Adapter
 ```
 
 ## 🧱 Fonctionnalités principales
@@ -143,7 +143,7 @@ L'application est maintenant accessible à l'adresse : http://localhost:8000
 - **🗄️ PostgreSQL 15** pour la persistance
 - **🌐 Nginx** serveur web haute performance
 - **🐳 Docker & Docker Compose** pour l'environnement
-- **🏗️ Architecture Hexagonale** (Clean Architecture)
+- **🏗️ Architecture Hexagonale**
 - **🎯 Domain-Driven Design** (DDD)
 - **🔌 Ports & Adapters Pattern**
 - **📋 CQRS** pour séparation commandes/queries
@@ -311,13 +311,13 @@ Grâce à l'architecture hexagonale et au versioning :
 
 ## 🏆 Points Forts de l'Architecture
 
-✅ **Clean Architecture** : Structure Uncle Bob complète  
+✅ **Architecture Hexagonale** : Ports & Adapters Pattern appliqué  
 ✅ **Domain-Driven Design** : Logique métier au centre  
 ✅ **SOLID Principles** : Tous respectés  
-✅ **Zero Framework Coupling** : Domain pur  
+✅ **Zero Framework Coupling** : Domaine pur et indépendant  
 ✅ **Testability** : 94 tests complets  
 ✅ **Maintainability** : Code propre et documenté  
 ✅ **Scalability** : Architecture prête pour la croissance  
-✅ **Performance** : Optimisations intégrées  
+✅ **Flexibility** : Adaptateurs facilement remplaçables  
 
-Cette architecture garantit un code **maintenable**, **testable**, et **évolutif** pour les années à venir ! 🚀
+Cette architecture hexagonale garantit un code **maintenable**, **testable**, et **évolutif** pour les années à venir ! 🚀

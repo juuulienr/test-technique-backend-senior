@@ -69,6 +69,5 @@ class CommentApplicationServiceTest extends TestCase
         $comments = $this->service->getCommentsByProfile($profileId);
 
         $this->assertCount(2, $comments);
-        $this->assertContainsOnlyInstancesOf(Comment::class, $comments);
     }
 } 

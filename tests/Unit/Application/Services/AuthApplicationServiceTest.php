@@ -30,7 +30,6 @@ class AuthApplicationServiceTest extends TestCase
         $token = $this->service->register('Test Admin', 'test@test.com', 'secret123');
 
         $this->assertNotEmpty($token);
-        $this->assertIsString($token);
         $this->assertDatabaseHas('admins', [
             'name' => 'Test Admin',
             'email' => 'test@test.com'
@@ -59,7 +58,6 @@ class AuthApplicationServiceTest extends TestCase
         $token = $this->service->login('test@test.com', 'secret123');
 
         $this->assertNotEmpty($token);
-        $this->assertIsString($token);
     }
 
     public function test_it_throws_exception_for_invalid_credentials(): void

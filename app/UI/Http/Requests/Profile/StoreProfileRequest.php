@@ -9,7 +9,7 @@ use Illuminate\Validation\Rules\Enum;
  * @property string $nom
  * @property string $prenom
  * @property \Illuminate\Http\UploadedFile $image
- * @property ProfileStatut $statut
+ * @property string $statut
  */
 class StoreProfileRequest extends BaseProfileRequest
 {
